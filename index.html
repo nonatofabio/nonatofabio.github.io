@@ -26,6 +26,7 @@
             <a href="#about">About</a>
             <a href="#projects">Projects</a>
             <a href="#expertise">Expertise</a>
+            <a href="#blog">Blog</a>
             <a href="#contact">Contact</a>
         </div>
     </nav>
@@ -39,6 +40,7 @@
                 <div class="hero-links">
                     <a href="https://github.com/nonatofabio" target="_blank" rel="noopener" class="btn btn-primary">GitHub</a>
                     <a href="https://www.linkedin.com/in/fabiononato/" target="_blank" rel="noopener" class="btn btn-secondary">LinkedIn</a>
+                    <a href="./blog/" class="btn btn-secondary">Blog</a>
                 </div>
             </div>
             <div class="hero-image">
@@ -199,6 +201,21 @@
         </div>
     </section>
 
+    <section id="blog" class="section blog-section">
+        <div class="container">
+            <h2>Latest Posts</h2>
+            <div class="blog-grid" id="recent-posts">
+                <!-- Posts loaded dynamically -->
+            </div>
+            <a href="./blog/" class="view-all">
+                View all posts
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M5 12h14M12 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+    </section>
+
     <section id="contact" class="section contact">
         <div class="container">
             <h2>Get in Touch</h2>
@@ -227,5 +244,46 @@
         </div>
     </footer>
 
+    <script>
+        async function loadRecentPosts() {
+            try {
+                const response = await fetch('./blog/posts.json');
+                const data = await response.json();
+                const container = document.getElementById('recent-posts');
+
+                // Sort by date descending and take first 3
+                const posts = data.posts
+                    .sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .slice(0, 3);
+
+                posts.forEach(post => {
+                    const card = document.createElement('a');
+                    card.href = `./blog/post.html?slug=${post.slug}`;
+                    card.className = 'blog-card';
+
+                    const date = new Date(post.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+
+                    const tags = post.tags.map(tag => `<span class="blog-tag">${tag}</span>`).join('');
+
+                    card.innerHTML = `
+                        <span class="blog-card-date">${date}</span>
+                        <h3 class="blog-card-title">${post.title}</h3>
+                        <p class="blog-card-excerpt">${post.description}</p>
+                        <div class="blog-card-tags">${tags}</div>
+                    `;
+
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Failed to load posts:', error);
+            }
+        }
+
+        loadRecentPosts();
+    </script>
     </body>
 </html>

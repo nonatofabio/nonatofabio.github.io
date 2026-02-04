@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TJ5S9V44SH"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-TJ5S9V44SH');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog | Fabio Nonato de Paula</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <meta name="description" content="Thoughts on AI/ML infrastructure, developer tools, cybersecurity, and open source.">
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <nav class="nav">
+        <a href="../" class="logo">{fnp}</a>
+        <div class="nav-links">
+            <a href="../#about">About</a>
+            <a href="../#projects">Projects</a>
+            <a href="../#expertise">Expertise</a>
+            <a href="./">Blog</a>
+            <a href="../#contact">Contact</a>
+        </div>
+    </nav>
+
+    <header class="blog-header">
+        <div class="container">
+            <h1>Blog</h1>
+            <p>Thoughts on AI/ML infrastructure, developer tools, and building useful things.</p>
+        </div>
+    </header>
+
+    <main class="blog-list">
+        <div class="container">
+            <div class="blog-grid" id="blog-posts">
+                <!-- Posts loaded dynamically -->
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <a href="../" class="logo">{fnp}</a>
+            <p>San Francisco, CA</p>
+        </div>
+    </footer>
+
+    <script>
+        async function loadPosts() {
+            try {
+                const response = await fetch('./posts.json');
+                const data = await response.json();
+                const container = document.getElementById('blog-posts');
+
+                // Sort by date descending
+                const posts = data.posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                posts.forEach(post => {
+                    const card = document.createElement('a');
+                    card.href = `./post.html?slug=${post.slug}`;
+                    card.className = 'blog-card';
+
+                    const date = new Date(post.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+
+                    const tags = post.tags.map(tag => `<span class="blog-tag">${tag}</span>`).join('');
+
+                    card.innerHTML = `
+                        <span class="blog-card-date">${date}</span>
+                        <h3 class="blog-card-title">${post.title}</h3>
+                        <p class="blog-card-excerpt">${post.description}</p>
+                        <div class="blog-card-tags">${tags}</div>
+                    `;
+
+                    container.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Failed to load posts:', error);
+            }
+        }
+
+        loadPosts();
+    </script>
+</body>
+</html>

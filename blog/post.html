@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TJ5S9V44SH"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-TJ5S9V44SH');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog | Fabio Nonato de Paula</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../styles.css">
+    <!-- Marked.js for Markdown rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <nav class="nav">
+        <a href="../" class="logo">{fnp}</a>
+        <div class="nav-links">
+            <a href="../#about">About</a>
+            <a href="../#projects">Projects</a>
+            <a href="../#expertise">Expertise</a>
+            <a href="./">Blog</a>
+            <a href="../#contact">Contact</a>
+        </div>
+    </nav>
+
+    <header class="post-header">
+        <div class="container">
+            <a href="./" class="back-link">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Blog
+            </a>
+            <div class="post-meta">
+                <span id="post-date"></span>
+            </div>
+            <h1 id="post-title">Loading...</h1>
+            <div class="blog-card-tags" id="post-tags"></div>
+        </div>
+    </header>
+
+    <article class="blog-content" id="post-content">
+        <!-- Content loaded dynamically -->
+    </article>
+
+    <footer class="footer">
+        <div class="container">
+            <a href="../" class="logo">{fnp}</a>
+            <p>San Francisco, CA</p>
+        </div>
+    </footer>
+
+    <script>
+        function parseFrontMatter(markdown) {
+            const match = markdown.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+            if (!match) return { meta: {}, content: markdown };
+
+            const frontMatter = match[1];
+            const content = match[2];
+            const meta = {};
+
+            frontMatter.split('\n').forEach(line => {
+                const [key, ...valueParts] = line.split(':');
+                if (key && valueParts.length) {
+                    let value = valueParts.join(':').trim();
+                    // Handle arrays (tags)
+                    if (value.includes(',')) {
+                        value = value.split(',').map(v => v.trim());
+                    }
+                    meta[key.trim()] = value;
+                }
+            });
+
+            return { meta, content };
+        }
+
+        async function loadPost() {
+            const params = new URLSearchParams(window.location.search);
+            const slug = params.get('slug');
+
+            if (!slug) {
+                document.getElementById('post-title').textContent = 'Post not found';
+                document.getElementById('post-content').innerHTML = '<p>No post specified. <a href="./">Return to blog</a>.</p>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`./posts/${slug}.md`);
+                if (!response.ok) throw new Error('Post not found');
+
+                const markdown = await response.text();
+                const { meta, content } = parseFrontMatter(markdown);
+
+                // Update page title
+                document.title = `${meta.title || slug} | Fabio Nonato de Paula`;
+
+                // Update meta description
+                if (meta.description) {
+                    let metaDesc = document.querySelector('meta[name="description"]');
+                    if (!metaDesc) {
+                        metaDesc = document.createElement('meta');
+                        metaDesc.name = 'description';
+                        document.head.appendChild(metaDesc);
+                    }
+                    metaDesc.content = meta.description;
+                }
+
+                // Update header
+                document.getElementById('post-title').textContent = meta.title || slug;
+
+                if (meta.date) {
+                    const date = new Date(meta.date).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                    document.getElementById('post-date').textContent = date;
+                }
+
+                // Render tags
+                const tagsContainer = document.getElementById('post-tags');
+                const tags = Array.isArray(meta.tags) ? meta.tags : (meta.tags ? [meta.tags] : []);
+                tagsContainer.innerHTML = tags.map(tag => `<span class="blog-tag">${tag}</span>`).join('');
+
+                // Render content
+                document.getElementById('post-content').innerHTML = marked.parse(content);
+
+            } catch (error) {
+                console.error('Failed to load post:', error);
+                document.getElementById('post-title').textContent = 'Post not found';
+                document.getElementById('post-content').innerHTML = '<p>Could not load this post. <a href="./">Return to blog</a>.</p>';
+            }
+        }
+
+        loadPost();
+    </script>
+</body>
+</html>
