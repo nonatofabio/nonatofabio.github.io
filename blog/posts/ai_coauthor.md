@@ -5,17 +5,11 @@ description: How I ran an ML research project with an AI agent as my collaborato
 tags: ai, ml, research, agents, collaboration
 ---
 
-# I Co-Authored a Research Paper With an AI Agent. Here's How It Actually Went.
-
 Look, I'm going to be honest with you. This whole thing started as an experiment within an experiment.
 
-The *official* research question was: "Can a language model learn continuously from human conversations without forgetting everything it already knows?"
+The *official* research question was: "Can a language model learn continuously from human conversations without forgetting everything it already knows?" But the *real* experiment? Whether I could run an entire ML research project - from hypothesis to paper - with an AI agent as my co-pilot. Not as a fancy autocomplete. As an actual collaborator.
 
-But the *real* experiment? Whether I could run an entire ML research project—from hypothesis to paper—with an AI agent as my co-pilot. Not as a fancy autocomplete. As an actual collaborator.
-
-Spoiler: It worked. We wrote a paper. And the process was, aham, *weird*.
-
----
+Spoiler: It worked. [We wrote a paper](./artifacts/paper.pdf). And the process was, aham, *weird*.
 
 ## The Setup: Human + Agent = ???
 
@@ -40,17 +34,11 @@ Agent: *runs eval, parses results, updates experiment notes*
 
 I was the advisor. The agent was the grad student who never sleeps and never complains about running "just one more ablation."
 
----
-
 ## Day 1: The Naive Approach (We Both Got It Wrong)
 
-Our first attempt was embarrassingly simple. Train a 0.5B model on conversation data. Check if it learned. Check if it forgot.
+Our first attempt was embarrassingly simple. Train a 0.5B model on conversation data. Check if it learned. Check if it forgot. The agent set everything up: data pipelines, training loop, GaLore optimizer. I reviewed the code, made some suggestions, and we kicked off a 500-step run.
 
-The agent set everything up: data pipelines, training loop, GaLore optimizer. I reviewed the code, made some suggestions, and we kicked off a 500-step run.
-
-The training loss looked beautiful. Smooth curves. Decreasing numbers.
-
-Then we ran the benchmarks.
+The training loss looked beautiful. Smooth curves. Decreasing numbers. Then we ran the benchmarks.
 
 ```
 MMLU: 48.26% → 43.45% (-4.8%)
@@ -59,19 +47,15 @@ Holdout perplexity: +14% to +22% WORSE
 
 **The model got dumber.** Classic overfitting. We'd both missed it.
 
-Here's the thing: the agent didn't try to hide the failure or spin it. It just... reported the results and asked what we should try next. No ego. No defensiveness. Just "well, that didn't work. Here are some hypotheses."
+Here's the thing: the agent didn't try to hide the failure or spin it. It just... reported the results and asked what we should try next. No ego. No defensiveness. Just "well, that didn't work. Here are some hypotheses." That's when I realized this collaboration might actually work.
 
-That's when I realized this collaboration might actually work.
 
----
 
 ## The Design of Experiments: Where the Agent Earned Its Keep
 
 I decided we needed a proper factorial experiment. Three hyperparameters, eight combinations, run in parallel. The kind of thing that's conceptually simple but logistically annoying.
 
-Me: "Let's do a 2³ DOE. Factors are rank reduction, LR scheduler, and weight decay."
-
-The agent:
+Me: "Let's do a 2³ DOE. Factors are rank reduction, LR scheduler, and weight decay." The agent:
 1. Generated all 8 config files
 2. Wrote a bash script to launch them in parallel across GPUs
 3. Wrote an eval script to benchmark all 8 models
@@ -90,11 +74,9 @@ When I came back, I had this:
 | 3.6 | 128 | ✅ | 0.2 | 43.90% | Worst |
 | ... | ... | ... | ... | ... | ... |
 
-The agent had already identified the pattern: **rank was the dominant factor**. Scheduler hurt. Weight decay did nothing.
+The agent had already identified the pattern: **rank was the dominant factor**. Scheduler hurt. Weight decay did nothing. *I didn't have to parse a single log file.*
 
-I didn't have to parse a single log file.
 
----
 
 ## The Scaling Crisis: When We Hit a Wall
 
@@ -104,9 +86,7 @@ Feeling confident, we tried the winning config on bigger models. TinyLlama (1.1B
 MMLU drop: -5.67%
 ```
 
-The agent flagged it immediately: "This exceeds the 5% threshold. The rank-64 setting may be too permissive for larger models."
-
-This is where the human-agent dynamic got interesting. The agent had the data. I had the intuition. Together, we hypothesized that bigger models need *lower* rank, meaning more constraint, not less.
+The agent flagged it immediately: "This exceeds the 5% threshold. The rank-64 setting may be too permissive for larger models." This is where the human-agent dynamic got interesting. The agent had the data. I had the intuition. Together, we hypothesized that bigger models need *lower* rank, meaning more constraint, not less.
 
 Me: "Try rank=32 on Gemma"
 Agent: *runs experiment*
@@ -122,13 +102,11 @@ We'd discovered a "scaling law": `rank ∝ 1/√params`. The agent helped me for
 
 Neither of us would have gotten there alone. I needed the agent to run the experiments fast enough to iterate. The agent needed me to recognize the pattern and propose the hypothesis.
 
----
+
 
 ## The 8B Moment: When It Actually Worked
 
-Time for the real test. Qwen3-8B. 8.2 billion parameters. Rank=8. 1000 training steps.
-
-The agent ran it overnight. I woke up to this message:
+Time for the real test. Qwen3-8B. 8.2 billion parameters. Rank=8. 1000 training steps. The agent ran it overnight. I woke up to this message:
 
 ```
 Training complete. 5:40 duration, 775 tokens/sec.
@@ -136,28 +114,22 @@ MMLU: 74.93% → 75.07% (+0.14%)
 Holdout PPL: 5.34 → 4.87 (-8.8%)
 ```
 
-Wait. **The model got smarter?**
-
-I didn't believe it. I asked the agent to run a statistical significance test.
+Wait. **The model got smarter?** I didn't believe it. I asked the agent to run a statistical significance test.
 
 ```
 Paired t-test: t=7.12, p<0.0001
 Significant: True
 ```
 
-It was real. The model learned from conversations *and* improved on benchmarks. Not just "acceptable forgetting", it got net positive knowledge transfer.
-
-The agent's response: "This proves the core hypothesis. Want me to update the experiment notes and commit?"
+It was real. The model learned from conversations *and* improved on benchmarks. Not just "acceptable forgetting", it got net positive knowledge transfer. The agent's response: "This proves the core hypothesis. Want me to update the experiment notes and commit?"
 
 Yes. Yes I did.
 
----
+
 
 ## The LoRA Showdown: A Plot Twist
 
-I had a nagging question: how does this compare to LoRA, the thing everyone actually uses?
-
-The agent ran the comparison. Same model, same data, same steps, same rank.
+I had a nagging question: how does this compare to LoRA, the thing everyone actually uses? The agent ran the comparison. Same model, same data, same steps, same rank.
 
 **Efficiency:**
 - LoRA: 22GB VRAM, 982 tokens/sec ✅
@@ -167,19 +139,15 @@ The agent ran the comparison. Same model, same data, same steps, same rank.
 - LoRA holdout PPL: +530% (catastrophic failure)
 - GaLore holdout PPL: -8.8% (genuine learning)
 
-LoRA was faster and lighter. It also *completely failed to learn anything generalizable*. The model memorized training data and forgot how to generalize.
-
-The agent's analysis was spot-on: "LoRA freezes base weights and only trains adapters. It can't integrate new knowledge—only patch outputs. GaLore projects gradients but updates all weights, enabling genuine learning."
+LoRA was faster and lighter. It also *completely failed to learn anything generalizable*. The model memorized training data and forgot how to generalize. The agent's analysis was spot-on: "LoRA freezes base weights and only trains adapters. It can't integrate new knowledge—only patch outputs. GaLore projects gradients but updates all weights, enabling genuine learning."
 
 That insight made it into the paper almost verbatim.
 
----
+
 
 ## Writing the Paper: The Final Boss
 
-After six phases of experiments, we had results. Now we needed a paper.
-
-This is where I expected the collaboration to break down. Writing is *hard*. It requires judgment, narrative, argumentation. Surely an AI can't...
+After six phases of experiments, we had results. Now we needed a paper. This is where I expected the collaboration to break down. Writing is *hard*. It requires judgment, narrative, argumentation. Surely an AI can't...
 
 The agent drafted the abstract in one shot. It was... good? Like, actually good. It captured the key findings, the methodology, the implications. I edited maybe 20%.
 
@@ -203,7 +171,6 @@ f385da7 Update paper with exp006 8B validation
 
 Every commit was a collaboration. Every result was verified. Every claim was backed by an experiment we'd run together.
 
----
 
 ## What I Learned About Human-Agent Collaboration
 
@@ -227,7 +194,6 @@ I checked every result. Every claim. Every number. The agent made mistakes, smal
 
 We built a system for AI to learn from human conversations. We did it *through* human-AI conversation. The research method mirrored the research question.
 
----
 
 ## The Takeaway
 
@@ -243,9 +209,9 @@ But the more interesting answer? "Can humans and AI agents do research together?
 
 Also yes.
 
----
 
-*The paper is done. The code is version controlled in a private (for now) GitHub. And I'm going to go touch grass now, something my co-author will never need to do.*
+
+*[The paper is available here](./artifacts/paper.pdf). The code is version controlled in a private (for now) GitHub. And I'm going to go touch grass now, something my co-author will never need to do.*
 
 *Thanks for reading.*
 

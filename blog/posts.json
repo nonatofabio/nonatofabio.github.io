@@ -1,6 +1,13 @@
 {
   "posts": [
     {
+      "slug": "ai_coauthor",
+      "title": "I Co-Authored a Research Paper With an AI Agent",
+      "date": "2026-02-04",
+      "description": "How I ran an ML research project with an AI agent as my collaborator - from hypothesis to published paper.",
+      "tags": ["ai", "ml", "research", "agents", "collaboration"]
+    },
+    {
       "slug": "welcome",
       "title": "Welcome to My Blog",
       "date": "2026-02-04",
