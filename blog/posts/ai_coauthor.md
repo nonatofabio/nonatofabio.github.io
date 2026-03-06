@@ -211,7 +211,7 @@ Also yes.
 
 
 
-*[The paper is available here](./artifacts/paper.pdf). The code is version controlled in a private (for now) GitHub. And I'm going to go touch grass now, something my co-author will never need to do.*
+*[The paper is available here](./artifacts/paper.pdf). The agent that made this possible is now open source: [Luna Agent](https://github.com/nonatofabio/luna-agent). And I'm going to go touch grass now, something my co-author will never need to do.*
 
 *Thanks for reading.*
 
