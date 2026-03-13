@@ -96,6 +96,74 @@ img {
     color: var(--accent-blue);
 }
 
+/* ===== Language Picker ===== */
+.lang-picker {
+    position: relative;
+    margin-left: 1.5rem;
+}
+
+.lang-toggle {
+    background: none;
+    border: 1px solid var(--bg-secondary);
+    border-radius: 4px;
+    padding: 0.35rem 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.lang-toggle:hover {
+    border-color: var(--accent-blue);
+    color: var(--accent-blue);
+}
+
+.lang-dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    background: var(--white);
+    border: 1px solid var(--bg-secondary);
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    display: none;
+    flex-direction: column;
+    min-width: 140px;
+    z-index: 1001;
+    overflow: hidden;
+}
+
+.lang-dropdown.open {
+    display: flex;
+}
+
+.lang-option {
+    background: none;
+    border: none;
+    padding: 0.5rem 0.75rem;
+    font-family: var(--font-sans);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.15s ease;
+}
+
+.lang-option:hover {
+    background: var(--bg-secondary);
+    color: var(--accent-blue);
+}
+
+.lang-option.active {
+    color: var(--accent-blue);
+    font-weight: 600;
+}
+
 /* ===== Hero Section ===== */
 .hero {
     min-height: 90vh;
@@ -748,6 +816,10 @@ img {
 
     .nav-links {
         display: none;
+    }
+
+    .lang-picker {
+        margin-left: auto;
     }
 
     .hero-content {
