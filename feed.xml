@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Fabio Nonato de Paula — Blog</title>
+  <subtitle>Thoughts on AI/ML infrastructure, developer tools, and building useful things.</subtitle>
+  <link href="https://nonatofabio.github.io/feed.xml" rel="self"/>
+  <link href="https://nonatofabio.github.io/blog/"/>
+  <id>https://nonatofabio.github.io/</id>
+  <updated>2026-03-04T00:00:00Z</updated>
+  <author>
+    <name>Fabio Nonato de Paula</name>
+  </author>
+
+  <entry>
+    <title>I Built My Own AI Agent (And Open-Sourced It)</title>
+    <link href="https://nonatofabio.github.io/blog/post.html?slug=luna_agent"/>
+    <id>https://nonatofabio.github.io/blog/post.html?slug=luna_agent</id>
+    <updated>2026-03-04T00:00:00Z</updated>
+    <summary>Why I rejected every agent framework and built Luna - a custom AI agent in ~2300 lines of Python with no frameworks.</summary>
+    <category term="ai"/>
+    <category term="agents"/>
+    <category term="open-source"/>
+    <category term="python"/>
+    <category term="homelab"/>
+  </entry>
+
+  <entry>
+    <title>I Co-Authored a Research Paper With an AI Agent</title>
+    <link href="https://nonatofabio.github.io/blog/post.html?slug=ai_coauthor"/>
+    <id>https://nonatofabio.github.io/blog/post.html?slug=ai_coauthor</id>
+    <updated>2026-02-04T00:00:00Z</updated>
+    <summary>How I ran an ML research project with an AI agent as my collaborator - from hypothesis to published paper.</summary>
+    <category term="ai"/>
+    <category term="ml"/>
+    <category term="research"/>
+    <category term="agents"/>
+    <category term="collaboration"/>
+  </entry>
+
+  <entry>
+    <title>Welcome to My Blog</title>
+    <link href="https://nonatofabio.github.io/blog/post.html?slug=welcome"/>
+    <id>https://nonatofabio.github.io/blog/post.html?slug=welcome</id>
+    <updated>2026-02-04T00:00:00Z</updated>
+    <summary>First post on my new blog - what to expect and why I'm writing.</summary>
+    <category term="meta"/>
+    <category term="introduction"/>
+  </entry>
+</feed>

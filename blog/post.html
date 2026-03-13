@@ -13,6 +13,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog | Fabio Nonato de Paula</title>
     <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <link rel="canonical" href="">
+    <!-- Open Graph -->
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="">
+    <meta property="og:title" content="Blog | Fabio Nonato de Paula">
+    <meta property="og:description" content="">
+    <meta property="og:image" content="https://nonatofabio.github.io/assets/headshot.jpeg">
+    <meta property="article:published_time" content="">
+    <meta property="article:author" content="https://nonatofabio.github.io">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Blog | Fabio Nonato de Paula">
+    <meta name="twitter:description" content="">
+    <meta name="twitter:image" content="https://nonatofabio.github.io/assets/headshot.jpeg">
+    <!-- RSS -->
+    <link rel="alternate" type="application/atom+xml" title="Fabio Nonato de Paula — Blog" href="https://nonatofabio.github.io/feed.xml">
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../styles.css">
     <!-- Marked.js for Markdown rendering -->
@@ -101,16 +117,51 @@
                 // Update page title
                 document.title = `${meta.title || slug} | Fabio Nonato de Paula`;
 
-                // Update meta description
-                if (meta.description) {
-                    let metaDesc = document.querySelector('meta[name="description"]');
-                    if (!metaDesc) {
-                        metaDesc = document.createElement('meta');
-                        metaDesc.name = 'description';
-                        document.head.appendChild(metaDesc);
-                    }
-                    metaDesc.content = meta.description;
+                // Update meta description and SEO tags
+                const postUrl = `https://nonatofabio.github.io/blog/post.html?slug=${slug}`;
+                const desc = meta.description || '';
+                const title = `${meta.title || slug} | Fabio Nonato de Paula`;
+
+                // Meta description
+                let metaDesc = document.querySelector('meta[name="description"]');
+                if (!metaDesc) {
+                    metaDesc = document.createElement('meta');
+                    metaDesc.name = 'description';
+                    document.head.appendChild(metaDesc);
                 }
+                metaDesc.content = desc;
+
+                // Canonical + OG + Twitter
+                const canonical = document.querySelector('link[rel="canonical"]');
+                if (canonical) canonical.href = postUrl;
+                document.querySelector('meta[property="og:url"]').content = postUrl;
+                document.querySelector('meta[property="og:title"]').content = title;
+                document.querySelector('meta[property="og:description"]').content = desc;
+                document.querySelector('meta[name="twitter:title"]').content = title;
+                document.querySelector('meta[name="twitter:description"]').content = desc;
+                if (meta.date) {
+                    document.querySelector('meta[property="article:published_time"]').content = meta.date;
+                }
+
+                // JSON-LD BlogPosting
+                const tags = Array.isArray(meta.tags) ? meta.tags : (meta.tags ? [meta.tags] : []);
+                const jsonLd = document.createElement('script');
+                jsonLd.type = 'application/ld+json';
+                jsonLd.textContent = JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "BlogPosting",
+                    "headline": meta.title || slug,
+                    "datePublished": meta.date || '',
+                    "description": desc,
+                    "url": postUrl,
+                    "keywords": tags.join(', '),
+                    "author": {
+                        "@type": "Person",
+                        "name": "Fabio Nonato de Paula",
+                        "url": "https://nonatofabio.github.io"
+                    }
+                });
+                document.head.appendChild(jsonLd);
 
                 // Update header
                 document.getElementById('post-title').textContent = meta.title || slug;
@@ -126,7 +177,6 @@
 
                 // Render tags
                 const tagsContainer = document.getElementById('post-tags');
-                const tags = Array.isArray(meta.tags) ? meta.tags : (meta.tags ? [meta.tags] : []);
                 tagsContainer.innerHTML = tags.map(tag => `<span class="blog-tag">${tag}</span>`).join('');
 
                 // Render content
