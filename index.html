@@ -110,10 +110,10 @@
             <h2 data-i18n="projects.title">Featured Projects</h2>
             <div class="project-grid">
 
-                <a href="https://github.com/nonatofabio/luna-agent" target="_blank" rel="noopener" class="project-card">
+                <a href="https://github.com/nonatofabio/luna-agent" target="_blank" rel="noopener" class="project-card" data-repo="nonatofabio/luna-agent">
                     <div class="project-header">
                         <span class="project-name">luna-agent</span>
-                        <span class="project-stars">9</span>
+                        <span class="project-stars">14</span>
                     </div>
                     <p class="project-desc" data-i18n="project.luna.desc">Custom minimal AI agent with persistent memory, MCP tools, and Discord — zero frameworks</p>
                     <div class="project-meta">
@@ -123,10 +123,10 @@
                     </div>
                 </a>
 
-                <a href="https://github.com/nonatofabio/local_faiss_mcp" target="_blank" rel="noopener" class="project-card">
+                <a href="https://github.com/nonatofabio/local_faiss_mcp" target="_blank" rel="noopener" class="project-card" data-repo="nonatofabio/local_faiss_mcp">
                     <div class="project-header">
                         <span class="project-name">local_faiss_mcp</span>
-                        <span class="project-stars">24</span>
+                        <span class="project-stars">27</span>
                     </div>
                     <p class="project-desc" data-i18n="project.faiss.desc">Local FAISS vector store as an MCP server — drop-in semantic search for Claude / Copilot / Agents</p>
                     <div class="project-meta">
@@ -136,10 +136,10 @@
                     </div>
                 </a>
 
-                <a href="https://github.com/nonatofabio/claude-sessions" target="_blank" rel="noopener" class="project-card">
+                <a href="https://github.com/nonatofabio/claude-sessions" target="_blank" rel="noopener" class="project-card" data-repo="nonatofabio/claude-sessions">
                     <div class="project-header">
                         <span class="project-name">claude-sessions</span>
-                        <span class="project-stars">-</span>
+                        <span class="project-stars">6</span>
                     </div>
                     <p class="project-desc" data-i18n="project.sessions.desc">Terminal UI for browsing, searching, and resuming Claude Code sessions</p>
                     <div class="project-meta">
@@ -149,36 +149,36 @@
                     </div>
                 </a>
 
-                <a href="https://github.com/nonatofabio/local-graphrag-mcp" target="_blank" rel="noopener" class="project-card">
+                <a href="https://github.com/nonatofabio/mindle" target="_blank" rel="noopener" class="project-card" data-repo="nonatofabio/mindle">
                     <div class="project-header">
-                        <span class="project-name">local-graphrag-mcp</span>
-                        <span class="project-stars">-</span>
+                        <span class="project-name">mindle</span>
+                        <span class="project-stars">4</span>
                     </div>
-                    <p class="project-desc" data-i18n="project.graphrag.desc">Local GraphRAG MCP server — knowledge graph retrieval with FAISS and NetworkX</p>
+                    <p class="project-desc" data-i18n="project.mindle.desc">A quiet place to read Markdown — native macOS e-reader with highlighting, annotations, and GFM support</p>
                     <div class="project-meta">
-                        <span class="project-lang python">Python</span>
-                        <span class="project-tag">mcp-server</span>
-                        <span class="project-tag">graphrag</span>
+                        <span class="project-lang swift">Swift</span>
+                        <span class="project-tag">macos</span>
+                        <span class="project-tag">ereader</span>
                     </div>
                 </a>
 
-                <a href="https://github.com/nonatofabio/livescribe" target="_blank" rel="noopener" class="project-card">
+                <a href="https://github.com/nonatofabio/livescribe" target="_blank" rel="noopener" class="project-card" data-repo="nonatofabio/livescribe">
                     <div class="project-header">
                         <span class="project-name">livescribe</span>
-                        <span class="project-stars">-</span>
+                        <span class="project-stars">0</span>
                     </div>
                     <p class="project-desc" data-i18n="project.livescribe.desc">Live transcription with Whisper — microphone and system audio capture</p>
                     <div class="project-meta">
-                        <span class="project-lang python">Python</span>
+                        <span class="project-lang rust">Rust</span>
                         <span class="project-tag">audio</span>
                         <span class="project-tag">whisper</span>
                     </div>
                 </a>
 
-                <a href="https://github.com/nonatofabio/hive-city-rampage" target="_blank" rel="noopener" class="project-card">
+                <a href="https://github.com/nonatofabio/hive-city-rampage" target="_blank" rel="noopener" class="project-card" data-repo="nonatofabio/hive-city-rampage">
                     <div class="project-header">
                         <span class="project-name">hive-city-rampage</span>
-                        <span class="project-stars">-</span>
+                        <span class="project-stars">0</span>
                     </div>
                     <p class="project-desc" data-i18n="project.hive.desc">Grimdark twin-stick shooter with procedural arenas and adaptive AI director</p>
                     <div class="project-meta">
@@ -341,6 +341,24 @@
         }
 
         loadRecentPosts();
+
+        async function loadProjectStars() {
+            const cards = document.querySelectorAll('.project-card[data-repo]');
+            await Promise.all(Array.from(cards).map(async card => {
+                const repo = card.dataset.repo;
+                try {
+                    const res = await fetch(`https://api.github.com/repos/${repo}`);
+                    if (!res.ok) return;
+                    const data = await res.json();
+                    const stars = card.querySelector('.project-stars');
+                    if (stars) stars.textContent = data.stargazers_count;
+                } catch (e) {
+                    // keep fallback value
+                }
+            }));
+        }
+
+        loadProjectStars();
     </script>
     </body>
 </html>

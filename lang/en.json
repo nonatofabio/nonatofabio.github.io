@@ -15,7 +15,7 @@
   "project.luna.desc": "Custom minimal AI agent with persistent memory, MCP tools, and Discord — zero frameworks",
   "project.faiss.desc": "Local FAISS vector store as an MCP server — drop-in semantic search for Claude / Copilot / Agents",
   "project.sessions.desc": "Terminal UI for browsing, searching, and resuming Claude Code sessions",
-  "project.graphrag.desc": "Local GraphRAG MCP server — knowledge graph retrieval with FAISS and NetworkX",
+  "project.mindle.desc": "A quiet place to read Markdown — native macOS e-reader with highlighting, annotations, and GFM support",
   "project.livescribe.desc": "Live transcription with Whisper — microphone and system audio capture",
   "project.hive.desc": "Grimdark twin-stick shooter with procedural arenas and adaptive AI director",
   "expertise.title": "Expertise",

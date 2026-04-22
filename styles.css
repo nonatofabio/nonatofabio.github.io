@@ -431,6 +431,16 @@ img {
     color: #F37626;
 }
 
+.project-lang.swift::before {
+    content: '\25CF ';
+    color: #F05138;
+}
+
+.project-lang.rust::before {
+    content: '\25CF ';
+    color: #DEA584;
+}
+
 .project-tag {
     background: rgba(0, 212, 255, 0.1);
     color: #0891B2;
