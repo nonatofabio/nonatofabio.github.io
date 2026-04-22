@@ -620,11 +620,18 @@ img {
     color: #0891B2;
 }
 
+.blog-actions {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
 .blog-section .view-all {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    margin-top: 2rem;
     font-weight: 500;
     color: var(--text-secondary);
     transition: color 0.2s ease;
@@ -637,6 +644,66 @@ img {
 .blog-section .view-all svg {
     width: 16px;
     height: 16px;
+}
+
+/* ===== RSS Subscribe Link ===== */
+.rss-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color 0.2s ease;
+}
+
+.rss-link:hover {
+    color: var(--accent-blue);
+}
+
+.rss-link svg {
+    width: 15px;
+    height: 15px;
+}
+
+/* Footer RSS icon — subtle, no label */
+.footer-rss {
+    display: inline-flex;
+    align-items: center;
+    color: var(--text-muted);
+    transition: color 0.2s ease;
+    padding: 0.25rem;
+}
+
+.footer-rss:hover {
+    color: var(--accent-blue);
+}
+
+.footer-rss svg {
+    width: 15px;
+    height: 15px;
+}
+
+/* Blog header RSS link */
+.blog-header-rss {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color 0.2s ease;
+    letter-spacing: 0.01em;
+}
+
+.blog-header-rss:hover {
+    color: var(--accent-blue);
+}
+
+.blog-header-rss svg {
+    width: 14px;
+    height: 14px;
 }
 
 /* ===== Blog Page Styles ===== */

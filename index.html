@@ -251,12 +251,22 @@
             <div class="blog-grid" id="recent-posts">
                 <!-- Posts loaded dynamically -->
             </div>
-            <a href="./blog/" class="view-all">
-                <span data-i18n="blog.viewAll">View all posts</span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M5 12h14M12 5l7 7-7 7"/>
-                </svg>
-            </a>
+            <div class="blog-actions">
+                <a href="./blog/" class="view-all">
+                    <span data-i18n="blog.viewAll">View all posts</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <a href="./feed.xml" class="rss-link" aria-label="Subscribe via RSS">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 11a9 9 0 0 1 9 9"/>
+                        <path d="M4 4a16 16 0 0 1 16 16"/>
+                        <circle cx="5" cy="19" r="1"/>
+                    </svg>
+                    <span data-i18n="blog.subscribe">Subscribe via RSS</span>
+                </a>
+            </div>
         </div>
     </section>
 
@@ -285,6 +295,13 @@
         <div class="container">
             <span class="logo">{fnp}</span>
             <p data-i18n="footer.location">San Francisco, CA</p>
+            <a href="./feed.xml" class="footer-rss" aria-label="Subscribe via RSS" title="RSS feed">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 11a9 9 0 0 1 9 9"/>
+                    <path d="M4 4a16 16 0 0 1 16 16"/>
+                    <circle cx="5" cy="19" r="1"/>
+                </svg>
+            </a>
         </div>
     </footer>
 
