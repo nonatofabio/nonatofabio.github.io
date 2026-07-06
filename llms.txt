@@ -1,6 +1,12 @@
 # Fabio Nonato de Paula
 
-> Personal site and blog of Fabio Nonato de Paula, Principal Applied Scientist at AWS working on agentic AI, based in Santa Rosa / SF Bay Area, CA. He writes about building AI agents from scratch, agent memory systems, ML infrastructure, developer tools, and AI security — with a bias toward simple, auditable, local-first systems.
+> Applied AI scientist writing about agentic memory — how AI agents
+> remember, learn, and improve across sessions. I approach memory as
+> a control problem grounded in active inference and expected free
+> energy, not just retrieval. I build open-source agent systems
+> (Luna Agent, local_faiss_mcp) and write about what actually works
+> in production: skill learning, memory benchmarking, and the failure
+> modes nobody publishes.
 
 ## Posts
 
@@ -10,7 +16,10 @@
 
 ## About
 
-- [Homepage](https://nonatofabio.github.io/): bio, featured open-source projects, and areas of expertise
-- [Blog index](https://nonatofabio.github.io/blog/): all posts
-- [GitHub](https://github.com/nonatofabio): open-source work, including luna-agent and local_faiss_mcp
-- [Atom feed](https://nonatofabio.github.io/feed.xml)
+- [Home](https://nonatofabio.github.io/): background, projects, contact
+- [GitHub](https://github.com/nonatofabio): open-source agent memory
+  and infrastructure projects
+- [Atom feed](https://nonatofabio.github.io/feed.xml): subscribe to new posts
+- Principal applied scientist working on agentic AI systems. Based in
+  the SF Bay Area. Open to conversations about agent memory research,
+  advising, and collaboration
