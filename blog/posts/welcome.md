@@ -1,7 +1,7 @@
 ---
 title: Welcome to My Blog
 date: 2026-02-04
-description: First post on my new blog - what to expect and why I'm writing.
+description: Why I'm starting a blog: practical lessons from AWS-scale ML infrastructure, developer tools like MCP servers, cybersecurity AI, and open-source deep dives.
 tags: meta, introduction
 ---
 

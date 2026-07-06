@@ -37,13 +37,24 @@
     {
       "@context": "https://schema.org",
       "@type": "Person",
+      "@id": "https://nonatofabio.github.io/#person",
       "name": "Fabio Nonato de Paula",
       "jobTitle": "Principal Applied Scientist",
       "worksFor": { "@type": "Organization", "name": "Amazon Web Services" },
-      "url": "https://nonatofabio.github.io",
+      "url": "https://nonatofabio.github.io/",
+      "image": "https://nonatofabio.github.io/assets/headshot.jpeg",
+      "homeLocation": { "@type": "Place", "name": "Santa Rosa / SF Bay Area, CA" },
       "sameAs": [
         "https://github.com/nonatofabio",
         "https://www.linkedin.com/in/fabiononato/"
+      ],
+      "knowsAbout": [
+        "Agentic AI",
+        "AI agent memory systems",
+        "ML infrastructure",
+        "Cybersecurity AI",
+        "Model Context Protocol (MCP)",
+        "Developer tools"
       ]
     }
     </script>
@@ -249,7 +260,26 @@
         <div class="container">
             <h2 data-i18n="blog.title">Latest Posts</h2>
             <div class="blog-grid" id="recent-posts">
-                <!-- Posts loaded dynamically -->
+                <!-- BUILD:POST-LIST -->
+                <a href="./blog/posts/luna_agent.html" class="blog-card">
+                    <span class="blog-card-date"><time datetime="2026-03-04">March 4, 2026</time></span>
+                    <h3 class="blog-card-title">I Built My Own AI Agent (And Open-Sourced It)</h3>
+                    <p class="blog-card-excerpt">Why I rejected every agent framework and built Luna — a ~2,300-line Python AI agent with SQLite hybrid-search memory, MCP tools, and Discord, fully local.</p>
+                    <div class="blog-card-tags"><span class="blog-tag">ai</span><span class="blog-tag">agents</span><span class="blog-tag">open-source</span><span class="blog-tag">python</span><span class="blog-tag">homelab</span></div>
+                </a>
+                <a href="./blog/posts/ai_coauthor.html" class="blog-card">
+                    <span class="blog-card-date"><time datetime="2026-02-04">February 4, 2026</time></span>
+                    <h3 class="blog-card-title">I Co-Authored a Research Paper With an AI Agent</h3>
+                    <p class="blog-card-excerpt">How I ran an ML research project with an AI agent as a real collaborator — GaLore continual-learning experiments, a rank scaling law, and a co-authored paper.</p>
+                    <div class="blog-card-tags"><span class="blog-tag">ai</span><span class="blog-tag">ml</span><span class="blog-tag">research</span><span class="blog-tag">agents</span><span class="blog-tag">collaboration</span></div>
+                </a>
+                <a href="./blog/posts/welcome.html" class="blog-card">
+                    <span class="blog-card-date"><time datetime="2026-02-04">February 4, 2026</time></span>
+                    <h3 class="blog-card-title">Welcome to My Blog</h3>
+                    <p class="blog-card-excerpt">Why I'm starting a blog: practical lessons from AWS-scale ML infrastructure, developer tools like MCP servers, cybersecurity AI, and open-source deep dives.</p>
+                    <div class="blog-card-tags"><span class="blog-tag">meta</span><span class="blog-tag">introduction</span></div>
+                </a>
+                <!-- /BUILD:POST-LIST -->
             </div>
             <div class="blog-actions">
                 <a href="./blog/" class="view-all">
@@ -294,7 +324,7 @@
     <footer class="footer">
         <div class="container">
             <span class="logo">{fnp}</span>
-            <p data-i18n="footer.location">San Francisco, CA</p>
+            <p data-i18n="footer.location">Santa Rosa / SF Bay Area, CA</p>
             <a href="./feed.xml" class="footer-rss" aria-label="Subscribe via RSS" title="RSS feed">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M4 11a9 9 0 0 1 9 9"/>
@@ -307,58 +337,6 @@
 
     <script src="i18n.js"></script>
     <script>
-        // Map i18n language codes to BCP-47 locales for date formatting
-        const LOCALE_MAP = {
-            'en': 'en-US',
-            'pt-BR': 'pt-BR',
-            'tlh': 'en-US',
-            'sjn': 'en-US',
-            'hig': 'la'
-        };
-
-        async function loadRecentPosts() {
-            try {
-                const response = await fetch('./blog/posts.json');
-                const data = await response.json();
-                const container = document.getElementById('recent-posts');
-
-                // Sort by date descending and take first 3
-                const posts = data.posts
-                    .sort((a, b) => new Date(b.date) - new Date(a.date))
-                    .slice(0, 3);
-
-                const lang = window.__currentLang || 'en';
-                const locale = LOCALE_MAP[lang] || 'en-US';
-
-                posts.forEach(post => {
-                    const card = document.createElement('a');
-                    card.href = `./blog/post.html?slug=${post.slug}`;
-                    card.className = 'blog-card';
-
-                    const date = new Date(post.date).toLocaleDateString(locale, {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    });
-
-                    const tags = post.tags.map(tag => `<span class="blog-tag">${tag}</span>`).join('');
-
-                    card.innerHTML = `
-                        <span class="blog-card-date">${date}</span>
-                        <h3 class="blog-card-title">${post.title}</h3>
-                        <p class="blog-card-excerpt">${post.description}</p>
-                        <div class="blog-card-tags">${tags}</div>
-                    `;
-
-                    container.appendChild(card);
-                });
-            } catch (error) {
-                console.error('Failed to load posts:', error);
-            }
-        }
-
-        loadRecentPosts();
-
         async function loadProjectStars() {
             const cards = document.querySelectorAll('.project-card[data-repo]');
             await Promise.all(Array.from(cards).map(async card => {

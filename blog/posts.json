@@ -4,21 +4,21 @@
       "slug": "luna_agent",
       "title": "I Built My Own AI Agent (And Open-Sourced It)",
       "date": "2026-03-04",
-      "description": "Why I rejected every agent framework and built Luna - a custom AI agent in ~2300 lines of Python with no frameworks.",
+      "description": "Why I rejected every agent framework and built Luna — a ~2,300-line Python AI agent with SQLite hybrid-search memory, MCP tools, and Discord, fully local.",
       "tags": ["ai", "agents", "open-source", "python", "homelab"]
     },
     {
       "slug": "ai_coauthor",
       "title": "I Co-Authored a Research Paper With an AI Agent",
       "date": "2026-02-04",
-      "description": "How I ran an ML research project with an AI agent as my collaborator - from hypothesis to published paper.",
+      "description": "How I ran an ML research project with an AI agent as a real collaborator — GaLore continual-learning experiments, a rank scaling law, and a co-authored paper.",
       "tags": ["ai", "ml", "research", "agents", "collaboration"]
     },
     {
       "slug": "welcome",
       "title": "Welcome to My Blog",
       "date": "2026-02-04",
-      "description": "First post on my new blog - what to expect and why I'm writing.",
+      "description": "Why I'm starting a blog: practical lessons from AWS-scale ML infrastructure, developer tools like MCP servers, cybersecurity AI, and open-source deep dives.",
       "tags": ["meta", "introduction"]
     }
   ]

@@ -1,202 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TJ5S9V44SH"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-TJ5S9V44SH');
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog | Fabio Nonato de Paula</title>
     <link rel="icon" type="image/svg+xml" href="../favicon.svg">
-    <link rel="canonical" href="">
-    <!-- Open Graph -->
-    <meta property="og:type" content="article">
-    <meta property="og:url" content="">
-    <meta property="og:title" content="Blog | Fabio Nonato de Paula">
-    <meta property="og:description" content="">
-    <meta property="og:image" content="https://nonatofabio.github.io/assets/headshot.jpeg">
-    <meta property="article:published_time" content="">
-    <meta property="article:author" content="https://nonatofabio.github.io">
-    <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="Blog | Fabio Nonato de Paula">
-    <meta name="twitter:description" content="">
-    <meta name="twitter:image" content="https://nonatofabio.github.io/assets/headshot.jpeg">
-    <!-- RSS -->
-    <link rel="alternate" type="application/atom+xml" title="Fabio Nonato de Paula — Blog" href="https://nonatofabio.github.io/feed.xml">
-    <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../styles.css">
-    <!-- Marked.js for Markdown rendering -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <meta name="robots" content="noindex">
+    <!-- Legacy URL shim: posts moved from post.html?slug=<slug> to static
+         pages at posts/<slug>.html. Redirect old links to the new location. -->
+    <script>
+        var slug = new URLSearchParams(window.location.search).get('slug');
+        if (slug && /^[A-Za-z0-9_-]+$/.test(slug)) {
+            window.location.replace('./posts/' + slug + '.html');
+        } else {
+            window.location.replace('./');
+        }
+    </script>
 </head>
 <body>
-    <nav class="nav">
-        <a href="../" class="logo">{fnp}</a>
-        <div class="nav-links">
-            <a href="../#about">About</a>
-            <a href="../#projects">Projects</a>
-            <a href="../#expertise">Expertise</a>
-            <a href="./">Blog</a>
-            <a href="../#contact">Contact</a>
-        </div>
-    </nav>
-
-    <header class="post-header">
-        <div class="container">
-            <a href="./" class="back-link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M19 12H5M12 19l-7-7 7-7"/>
-                </svg>
-                Back to Blog
-            </a>
-            <div class="post-meta">
-                <span id="post-date"></span>
-            </div>
-            <h1 id="post-title">Loading...</h1>
-            <div class="blog-card-tags" id="post-tags"></div>
-        </div>
-    </header>
-
-    <article class="blog-content" id="post-content">
-        <!-- Content loaded dynamically -->
-    </article>
-
-    <footer class="footer">
-        <div class="container">
-            <a href="../" class="logo">{fnp}</a>
-            <p>San Francisco, CA</p>
-            <a href="../feed.xml" class="footer-rss" aria-label="Subscribe via RSS" title="RSS feed">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M4 11a9 9 0 0 1 9 9"/>
-                    <path d="M4 4a16 16 0 0 1 16 16"/>
-                    <circle cx="5" cy="19" r="1"/>
-                </svg>
-            </a>
-        </div>
-    </footer>
-
-    <script>
-        function parseFrontMatter(markdown) {
-            const match = markdown.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-            if (!match) return { meta: {}, content: markdown };
-
-            const frontMatter = match[1];
-            const content = match[2];
-            const meta = {};
-
-            frontMatter.split('\n').forEach(line => {
-                const [key, ...valueParts] = line.split(':');
-                if (key && valueParts.length) {
-                    let value = valueParts.join(':').trim();
-                    // Handle arrays (tags)
-                    if (value.includes(',')) {
-                        value = value.split(',').map(v => v.trim());
-                    }
-                    meta[key.trim()] = value;
-                }
-            });
-
-            return { meta, content };
-        }
-
-        async function loadPost() {
-            const params = new URLSearchParams(window.location.search);
-            const slug = params.get('slug');
-
-            if (!slug) {
-                document.getElementById('post-title').textContent = 'Post not found';
-                document.getElementById('post-content').innerHTML = '<p>No post specified. <a href="./">Return to blog</a>.</p>';
-                return;
-            }
-
-            try {
-                const response = await fetch(`./posts/${slug}.md`);
-                if (!response.ok) throw new Error('Post not found');
-
-                const markdown = await response.text();
-                const { meta, content } = parseFrontMatter(markdown);
-
-                // Update page title
-                document.title = `${meta.title || slug} | Fabio Nonato de Paula`;
-
-                // Update meta description and SEO tags
-                const postUrl = `https://nonatofabio.github.io/blog/post.html?slug=${slug}`;
-                const desc = meta.description || '';
-                const title = `${meta.title || slug} | Fabio Nonato de Paula`;
-
-                // Meta description
-                let metaDesc = document.querySelector('meta[name="description"]');
-                if (!metaDesc) {
-                    metaDesc = document.createElement('meta');
-                    metaDesc.name = 'description';
-                    document.head.appendChild(metaDesc);
-                }
-                metaDesc.content = desc;
-
-                // Canonical + OG + Twitter
-                const canonical = document.querySelector('link[rel="canonical"]');
-                if (canonical) canonical.href = postUrl;
-                document.querySelector('meta[property="og:url"]').content = postUrl;
-                document.querySelector('meta[property="og:title"]').content = title;
-                document.querySelector('meta[property="og:description"]').content = desc;
-                document.querySelector('meta[name="twitter:title"]').content = title;
-                document.querySelector('meta[name="twitter:description"]').content = desc;
-                if (meta.date) {
-                    document.querySelector('meta[property="article:published_time"]').content = meta.date;
-                }
-
-                // JSON-LD BlogPosting
-                const tags = Array.isArray(meta.tags) ? meta.tags : (meta.tags ? [meta.tags] : []);
-                const jsonLd = document.createElement('script');
-                jsonLd.type = 'application/ld+json';
-                jsonLd.textContent = JSON.stringify({
-                    "@context": "https://schema.org",
-                    "@type": "BlogPosting",
-                    "headline": meta.title || slug,
-                    "datePublished": meta.date || '',
-                    "description": desc,
-                    "url": postUrl,
-                    "keywords": tags.join(', '),
-                    "author": {
-                        "@type": "Person",
-                        "name": "Fabio Nonato de Paula",
-                        "url": "https://nonatofabio.github.io"
-                    }
-                });
-                document.head.appendChild(jsonLd);
-
-                // Update header
-                document.getElementById('post-title').textContent = meta.title || slug;
-
-                if (meta.date) {
-                    const date = new Date(meta.date).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    });
-                    document.getElementById('post-date').textContent = date;
-                }
-
-                // Render tags
-                const tagsContainer = document.getElementById('post-tags');
-                tagsContainer.innerHTML = tags.map(tag => `<span class="blog-tag">${tag}</span>`).join('');
-
-                // Render content
-                document.getElementById('post-content').innerHTML = marked.parse(content);
-
-            } catch (error) {
-                console.error('Failed to load post:', error);
-                document.getElementById('post-title').textContent = 'Post not found';
-                document.getElementById('post-content').innerHTML = '<p>Could not load this post. <a href="./">Return to blog</a>.</p>';
-            }
-        }
-
-        loadPost();
-    </script>
+    <p>This post has moved. <a href="./">Browse all posts</a>.</p>
 </body>
 </html>

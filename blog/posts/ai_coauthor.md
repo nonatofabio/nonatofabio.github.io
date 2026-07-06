@@ -1,7 +1,7 @@
 ---
 title: I Co-Authored a Research Paper With an AI Agent
 date: 2026-02-04
-description: How I ran an ML research project with an AI agent as my collaborator - from hypothesis to published paper.
+description: How I ran an ML research project with an AI agent as a real collaborator — GaLore continual-learning experiments, a rank scaling law, and a co-authored paper.
 tags: ai, ml, research, agents, collaboration
 ---
 
@@ -9,7 +9,7 @@ Look, I'm going to be honest with you. This whole thing started as an experiment
 
 The *official* research question was: "Can a language model learn continuously from human conversations without forgetting everything it already knows?" But the *real* experiment? Whether I could run an entire ML research project - from hypothesis to paper - with an AI agent as my co-pilot. Not as a fancy autocomplete. As an actual collaborator.
 
-Spoiler: It worked. [We wrote a paper](./artifacts/paper.pdf). And the process was, aham, *weird*.
+Spoiler: It worked. [We wrote a paper](../artifacts/paper.pdf). And the process was, aham, *weird*.
 
 ## The Setup: Human + Agent = ???
 
@@ -211,7 +211,7 @@ Also yes.
 
 
 
-*[The paper is available here](./artifacts/paper.pdf). The code we wrote is in: [Continuous Learning](https://github.com/nonatofabio/continuous-learning). And I'm going to go touch grass now, something my co-author will never need to do.*
+*[The paper is available here](../artifacts/paper.pdf). The code we wrote is in: [Continuous Learning](https://github.com/nonatofabio/continuous-learning). And I'm going to go touch grass now, something my co-author will never need to do.*
 
 *Thanks for reading.*
 
