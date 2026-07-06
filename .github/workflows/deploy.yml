@@ -17,6 +17,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build static blog pages
+        run: |
+          npm ci
+          npm run build
+
       - name: Publish to gh-pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:

@@ -1,7 +1,7 @@
 ---
 title: I Built My Own AI Agent (And Open-Sourced It)
 date: 2026-03-04
-description: Why I rejected every agent framework and built Luna - a custom AI agent in ~2300 lines of Python with no frameworks.
+description: Why I rejected every agent framework and built Luna — a ~2,300-line Python AI agent with SQLite hybrid-search memory, MCP tools, and Discord, fully local.
 tags: ai, agents, open-source, python, homelab
 ---
 

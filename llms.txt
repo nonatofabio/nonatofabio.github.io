@@ -1,0 +1,16 @@
+# Fabio Nonato de Paula
+
+> Personal site and blog of Fabio Nonato de Paula, Principal Applied Scientist at AWS working on agentic AI, based in Santa Rosa / SF Bay Area, CA. He writes about building AI agents from scratch, agent memory systems, ML infrastructure, developer tools, and AI security — with a bias toward simple, auditable, local-first systems.
+
+## Posts
+
+- [I Built My Own AI Agent (And Open-Sourced It)](https://nonatofabio.github.io/blog/posts/luna_agent.html): Why I rejected every agent framework and built Luna — a ~2,300-line Python AI agent with SQLite hybrid-search memory, MCP tools, and Discord, fully local.
+- [I Co-Authored a Research Paper With an AI Agent](https://nonatofabio.github.io/blog/posts/ai_coauthor.html): How I ran an ML research project with an AI agent as a real collaborator — GaLore continual-learning experiments, a rank scaling law, and a co-authored paper.
+- [Welcome to My Blog](https://nonatofabio.github.io/blog/posts/welcome.html): Why I'm starting a blog: practical lessons from AWS-scale ML infrastructure, developer tools like MCP servers, cybersecurity AI, and open-source deep dives.
+
+## About
+
+- [Homepage](https://nonatofabio.github.io/): bio, featured open-source projects, and areas of expertise
+- [Blog index](https://nonatofabio.github.io/blog/): all posts
+- [GitHub](https://github.com/nonatofabio): open-source work, including luna-agent and local_faiss_mcp
+- [Atom feed](https://nonatofabio.github.io/feed.xml)

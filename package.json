@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "node build.js"
+  },
+  "devDependencies": {
+    "marked": "^18.0.5"
+  }
+}
