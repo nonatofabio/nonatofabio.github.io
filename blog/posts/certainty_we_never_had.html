@@ -125,7 +125,7 @@
     </header>
 
     <article class="blog-content">
-<div class="listen-box">
+<div class="listen-box" id="listen">
   <p class="listen-label">🎧 Prefer to listen? 10:44, narrated locally on my homelab with <a href="https://github.com/nonatofabio">LVNA</a>.</p>
   <audio id="post-audio" controls preload="none" style="width:100%;">
     <source src="../artifacts/the-certainty-we-never-had.mp3" type="audio/mpeg">
@@ -133,7 +133,7 @@
     <a href="../artifacts/the-certainty-we-never-had.mp3">Download the MP3</a>.
   </audio>
 </div><style>
-.listen-box{border:1px solid rgba(128,128,128,.25);border-radius:.6rem;padding:1rem 1.1rem;margin:1.5rem 0;}
+.listen-box{scroll-margin-top:2rem;border:1px solid rgba(128,128,128,.25);border-radius:.6rem;padding:1rem 1.1rem;margin:1.5rem 0;}
 .listen-box .listen-label{margin:0 0 .6rem;font-size:.95rem;opacity:.8;}
 </style><script>
 (function(){
@@ -150,6 +150,12 @@
     if(p>=.75)once('audio_75');
   });
   a.addEventListener('ended',function(){once('audio_complete');});
+  // Arriving via #listen (e.g. the audio link on LinkedIn) should land on the
+  // player rather than the top of a 1,400-word essay.
+  if(location.hash==='#listen'){
+    a.preload='metadata';
+    setTimeout(function(){a.scrollIntoView({block:'center'});},0);
+  }
 })();
 </script><p>There&#39;s a story our industry tells itself: traditional software is deterministic, therefore predictable, therefore safe. And AI, because it samples from a probability distribution, is none of those things.</p>
 <p>The story is comforting. It&#39;s also wrong on both ends. It flatters conventional software with a certainty it never had, and it condemns AI against a baseline that exists only in textbooks.</p>
