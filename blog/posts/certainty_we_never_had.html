@@ -125,10 +125,33 @@
     </header>
 
     <article class="blog-content">
-<blockquote>
-<p>🎧 <strong>Prefer to listen?</strong> <a href="../artifacts/the-certainty-we-never-had.mp3">Narrated version (10:44)</a>, generated locally on my homelab with <a href="https://github.com/nonatofabio">LVNA</a>.</p>
-</blockquote>
-<p>There&#39;s a story our industry tells itself: traditional software is deterministic, therefore predictable, therefore safe. And AI, because it samples from a probability distribution, is none of those things.</p>
+<div class="listen-box">
+  <p class="listen-label">🎧 Prefer to listen? 10:44, narrated locally on my homelab with <a href="https://github.com/nonatofabio">LVNA</a>.</p>
+  <audio id="post-audio" controls preload="none" style="width:100%;">
+    <source src="../artifacts/the-certainty-we-never-had.mp3" type="audio/mpeg">
+    Your browser doesn't support audio playback.
+    <a href="../artifacts/the-certainty-we-never-had.mp3">Download the MP3</a>.
+  </audio>
+</div><style>
+.listen-box{border:1px solid rgba(128,128,128,.25);border-radius:.6rem;padding:1rem 1.1rem;margin:1.5rem 0;}
+.listen-box .listen-label{margin:0 0 .6rem;font-size:.95rem;opacity:.8;}
+</style><script>
+(function(){
+  var a=document.getElementById('post-audio');
+  if(!a||typeof gtag!=='function')return;
+  var fired={};
+  function once(n){if(fired[n])return;fired[n]=true;gtag('event',n,{post:'certainty_we_never_had',surface:'post'});}
+  a.addEventListener('play',function(){once('audio_play');});
+  a.addEventListener('timeupdate',function(){
+    if(!a.duration)return;
+    var p=a.currentTime/a.duration;
+    if(p>=.25)once('audio_25');
+    if(p>=.5)once('audio_50');
+    if(p>=.75)once('audio_75');
+  });
+  a.addEventListener('ended',function(){once('audio_complete');});
+})();
+</script><p>There&#39;s a story our industry tells itself: traditional software is deterministic, therefore predictable, therefore safe. And AI, because it samples from a probability distribution, is none of those things.</p>
 <p>The story is comforting. It&#39;s also wrong on both ends. It flatters conventional software with a certainty it never had, and it condemns AI against a baseline that exists only in textbooks.</p>
 <p>A note on where I&#39;m arguing from. I&#39;ve spent a long time on the operations side of large-scale cloud systems, and most of what convinced me of this sits in incident reviews I can&#39;t quote. So I&#39;m not going to pretend a citation is doing work that experience is doing. What follows is grounded in public literature wherever the literature will carry it, and flagged as my own judgment where it won&#39;t. You should discount the second part accordingly, but I&#39;d rather you discount it than have me dress it up.</p>
 <h2>The determinism fetish</h2>

@@ -22,10 +22,33 @@
     <category term="sre"/>
     <category term="reliability"/>
     <category term="operations"/>
-    <content type="html">&lt;blockquote&gt;
-&lt;p&gt;🎧 &lt;strong&gt;Prefer to listen?&lt;/strong&gt; &lt;a href=&quot;../artifacts/the-certainty-we-never-had.mp3&quot;&gt;Narrated version (10:44)&lt;/a&gt;, generated locally on my homelab with &lt;a href=&quot;https://github.com/nonatofabio&quot;&gt;LVNA&lt;/a&gt;.&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;There&amp;#39;s a story our industry tells itself: traditional software is deterministic, therefore predictable, therefore safe. And AI, because it samples from a probability distribution, is none of those things.&lt;/p&gt;
+    <content type="html">&lt;div class=&quot;listen-box&quot;&gt;
+  &lt;p class=&quot;listen-label&quot;&gt;🎧 Prefer to listen? 10:44, narrated locally on my homelab with &lt;a href=&quot;https://github.com/nonatofabio&quot;&gt;LVNA&lt;/a&gt;.&lt;/p&gt;
+  &lt;audio id=&quot;post-audio&quot; controls preload=&quot;none&quot; style=&quot;width:100%;&quot;&gt;
+    &lt;source src=&quot;../artifacts/the-certainty-we-never-had.mp3&quot; type=&quot;audio/mpeg&quot;&gt;
+    Your browser doesn't support audio playback.
+    &lt;a href=&quot;../artifacts/the-certainty-we-never-had.mp3&quot;&gt;Download the MP3&lt;/a&gt;.
+  &lt;/audio&gt;
+&lt;/div&gt;&lt;style&gt;
+.listen-box{border:1px solid rgba(128,128,128,.25);border-radius:.6rem;padding:1rem 1.1rem;margin:1.5rem 0;}
+.listen-box .listen-label{margin:0 0 .6rem;font-size:.95rem;opacity:.8;}
+&lt;/style&gt;&lt;script&gt;
+(function(){
+  var a=document.getElementById('post-audio');
+  if(!a||typeof gtag!=='function')return;
+  var fired={};
+  function once(n){if(fired[n])return;fired[n]=true;gtag('event',n,{post:'certainty_we_never_had',surface:'post'});}
+  a.addEventListener('play',function(){once('audio_play');});
+  a.addEventListener('timeupdate',function(){
+    if(!a.duration)return;
+    var p=a.currentTime/a.duration;
+    if(p&gt;=.25)once('audio_25');
+    if(p&gt;=.5)once('audio_50');
+    if(p&gt;=.75)once('audio_75');
+  });
+  a.addEventListener('ended',function(){once('audio_complete');});
+})();
+&lt;/script&gt;&lt;p&gt;There&amp;#39;s a story our industry tells itself: traditional software is deterministic, therefore predictable, therefore safe. And AI, because it samples from a probability distribution, is none of those things.&lt;/p&gt;
 &lt;p&gt;The story is comforting. It&amp;#39;s also wrong on both ends. It flatters conventional software with a certainty it never had, and it condemns AI against a baseline that exists only in textbooks.&lt;/p&gt;
 &lt;p&gt;A note on where I&amp;#39;m arguing from. I&amp;#39;ve spent a long time on the operations side of large-scale cloud systems, and most of what convinced me of this sits in incident reviews I can&amp;#39;t quote. So I&amp;#39;m not going to pretend a citation is doing work that experience is doing. What follows is grounded in public literature wherever the literature will carry it, and flagged as my own judgment where it won&amp;#39;t. You should discount the second part accordingly, but I&amp;#39;d rather you discount it than have me dress it up.&lt;/p&gt;
 &lt;h2&gt;The determinism fetish&lt;/h2&gt;

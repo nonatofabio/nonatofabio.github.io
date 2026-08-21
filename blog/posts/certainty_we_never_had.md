@@ -5,7 +5,37 @@ description: Software was never as predictable as we told ourselves. AI didn't b
 tags: software-engineering, ai, sre, reliability, operations
 ---
 
-> 🎧 **Prefer to listen?** [Narrated version (10:44)](../artifacts/the-certainty-we-never-had.mp3), generated locally on my homelab with [LVNA](https://github.com/nonatofabio).
+<div class="listen-box">
+  <p class="listen-label">🎧 Prefer to listen? 10:44, narrated locally on my homelab with <a href="https://github.com/nonatofabio">LVNA</a>.</p>
+  <audio id="post-audio" controls preload="none" style="width:100%;">
+    <source src="../artifacts/the-certainty-we-never-had.mp3" type="audio/mpeg">
+    Your browser doesn't support audio playback.
+    <a href="../artifacts/the-certainty-we-never-had.mp3">Download the MP3</a>.
+  </audio>
+</div>
+
+<style>
+.listen-box{border:1px solid rgba(128,128,128,.25);border-radius:.6rem;padding:1rem 1.1rem;margin:1.5rem 0;}
+.listen-box .listen-label{margin:0 0 .6rem;font-size:.95rem;opacity:.8;}
+</style>
+
+<script>
+(function(){
+  var a=document.getElementById('post-audio');
+  if(!a||typeof gtag!=='function')return;
+  var fired={};
+  function once(n){if(fired[n])return;fired[n]=true;gtag('event',n,{post:'certainty_we_never_had',surface:'post'});}
+  a.addEventListener('play',function(){once('audio_play');});
+  a.addEventListener('timeupdate',function(){
+    if(!a.duration)return;
+    var p=a.currentTime/a.duration;
+    if(p>=.25)once('audio_25');
+    if(p>=.5)once('audio_50');
+    if(p>=.75)once('audio_75');
+  });
+  a.addEventListener('ended',function(){once('audio_complete');});
+})();
+</script>
 
 There's a story our industry tells itself: traditional software is deterministic, therefore predictable, therefore safe. And AI, because it samples from a probability distribution, is none of those things.
 
