@@ -5,7 +5,7 @@ description: Software was never as predictable as we told ourselves. AI didn't b
 tags: software-engineering, ai, sre, reliability, operations
 ---
 
-<div class="listen-box">
+<div class="listen-box" id="listen">
   <p class="listen-label">🎧 Prefer to listen? 10:44, narrated locally on my homelab with <a href="https://github.com/nonatofabio">LVNA</a>.</p>
   <audio id="post-audio" controls preload="none" style="width:100%;">
     <source src="../artifacts/the-certainty-we-never-had.mp3" type="audio/mpeg">
@@ -15,7 +15,7 @@ tags: software-engineering, ai, sre, reliability, operations
 </div>
 
 <style>
-.listen-box{border:1px solid rgba(128,128,128,.25);border-radius:.6rem;padding:1rem 1.1rem;margin:1.5rem 0;}
+.listen-box{scroll-margin-top:2rem;border:1px solid rgba(128,128,128,.25);border-radius:.6rem;padding:1rem 1.1rem;margin:1.5rem 0;}
 .listen-box .listen-label{margin:0 0 .6rem;font-size:.95rem;opacity:.8;}
 </style>
 
@@ -34,6 +34,12 @@ tags: software-engineering, ai, sre, reliability, operations
     if(p>=.75)once('audio_75');
   });
   a.addEventListener('ended',function(){once('audio_complete');});
+  // Arriving via #listen (e.g. the audio link on LinkedIn) should land on the
+  // player rather than the top of a 1,400-word essay.
+  if(location.hash==='#listen'){
+    a.preload='metadata';
+    setTimeout(function(){a.scrollIntoView({block:'center'});},0);
+  }
 })();
 </script>
 
