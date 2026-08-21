@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-TJ5S9V44SH"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-TJ5S9V44SH');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Certainty We Never Had (audio) | Fabio Nonato de Paula</title>
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+    <meta name="description" content="Narrated version of The Certainty We Never Had. 10 minutes, generated locally.">
+    <link rel="canonical" href="https://nonatofabio.github.io/listen/certainty.html">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://nonatofabio.github.io/listen/certainty.html">
+    <meta property="og:title" content="The Certainty We Never Had (audio)">
+    <meta property="og:description" content="Narrated version. 10 minutes, generated locally on my homelab.">
+    <meta property="og:audio" content="https://nonatofabio.github.io/blog/artifacts/the-certainty-we-never-had.mp3">
+    <meta property="og:audio:type" content="audio/mpeg">
+    <meta name="twitter:card" content="summary">
+    <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+    <main class="container" style="max-width:44rem;padding:4rem 1.5rem;">
+        <p style="margin-bottom:.5rem;"><a href="../blog/">&larr; Blog</a></p>
+        <h1>The Certainty We Never Had</h1>
+        <p style="opacity:.75;">
+          Software was never as predictable as we told ourselves. AI didn't break
+          the promise. It exposed that the promise was always fiction.
+        </p>
+        <p style="opacity:.6;font-size:.95rem;">
+          10 minutes. Narrated locally on my homelab, no cloud TTS.
+        </p>
+
+        <audio id="player" controls preload="metadata" style="width:100%;margin:2rem 0;">
+            <source src="../blog/artifacts/the-certainty-we-never-had.mp3" type="audio/mpeg">
+            Your browser doesn't support audio playback.
+            <a href="../blog/artifacts/the-certainty-we-never-had.mp3">Download the MP3</a>.
+        </audio>
+
+        <p>
+          <a href="../blog/posts/certainty_we_never_had.html">Read it instead</a>
+          &nbsp;·&nbsp;
+          <a href="../blog/artifacts/the-certainty-we-never-had.mp3" download>Download MP3</a>
+        </p>
+    </main>
+
+    <script>
+      // Report how far people actually get. Plays are cheap; completion is the
+      // number worth knowing.
+      (function () {
+        var a = document.getElementById('player');
+        if (!a || typeof gtag !== 'function') return;
+        var fired = {};
+        function once(name, params) {
+          if (fired[name]) return;
+          fired[name] = true;
+          gtag('event', name, params || {});
+        }
+        a.addEventListener('play', function () {
+          once('audio_play', { post: 'certainty_we_never_had' });
+        });
+        a.addEventListener('timeupdate', function () {
+          if (!a.duration) return;
+          var pct = a.currentTime / a.duration;
+          [[0.25, 'audio_25'], [0.5, 'audio_50'], [0.75, 'audio_75']].forEach(function (m) {
+            if (pct >= m[0]) once(m[1], { post: 'certainty_we_never_had' });
+          });
+        });
+        a.addEventListener('ended', function () {
+          once('audio_complete', { post: 'certainty_we_never_had' });
+        });
+      })();
+    </script>
+</body>
+</html>
