@@ -22,7 +22,7 @@
     <category term="sre"/>
     <category term="reliability"/>
     <category term="operations"/>
-    <content type="html">&lt;div class=&quot;listen-box&quot;&gt;
+    <content type="html">&lt;div class=&quot;listen-box&quot; id=&quot;listen&quot;&gt;
   &lt;p class=&quot;listen-label&quot;&gt;🎧 Prefer to listen? 10:44, narrated locally on my homelab with &lt;a href=&quot;https://github.com/nonatofabio&quot;&gt;LVNA&lt;/a&gt;.&lt;/p&gt;
   &lt;audio id=&quot;post-audio&quot; controls preload=&quot;none&quot; style=&quot;width:100%;&quot;&gt;
     &lt;source src=&quot;../artifacts/the-certainty-we-never-had.mp3&quot; type=&quot;audio/mpeg&quot;&gt;
@@ -30,7 +30,7 @@
     &lt;a href=&quot;../artifacts/the-certainty-we-never-had.mp3&quot;&gt;Download the MP3&lt;/a&gt;.
   &lt;/audio&gt;
 &lt;/div&gt;&lt;style&gt;
-.listen-box{border:1px solid rgba(128,128,128,.25);border-radius:.6rem;padding:1rem 1.1rem;margin:1.5rem 0;}
+.listen-box{scroll-margin-top:2rem;border:1px solid rgba(128,128,128,.25);border-radius:.6rem;padding:1rem 1.1rem;margin:1.5rem 0;}
 .listen-box .listen-label{margin:0 0 .6rem;font-size:.95rem;opacity:.8;}
 &lt;/style&gt;&lt;script&gt;
 (function(){
@@ -47,6 +47,12 @@
     if(p&gt;=.75)once('audio_75');
   });
   a.addEventListener('ended',function(){once('audio_complete');});
+  // Arriving via #listen (e.g. the audio link on LinkedIn) should land on the
+  // player rather than the top of a 1,400-word essay.
+  if(location.hash==='#listen'){
+    a.preload='metadata';
+    setTimeout(function(){a.scrollIntoView({block:'center'});},0);
+  }
 })();
 &lt;/script&gt;&lt;p&gt;There&amp;#39;s a story our industry tells itself: traditional software is deterministic, therefore predictable, therefore safe. And AI, because it samples from a probability distribution, is none of those things.&lt;/p&gt;
 &lt;p&gt;The story is comforting. It&amp;#39;s also wrong on both ends. It flatters conventional software with a certainty it never had, and it condemns AI against a baseline that exists only in textbooks.&lt;/p&gt;
