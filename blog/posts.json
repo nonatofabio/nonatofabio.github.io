@@ -1,6 +1,19 @@
 {
   "posts": [
     {
+      "slug": "pixel_art_build_system",
+      "title": "AI Generated Pixel Art Needs a Build System, Not Better Prompts",
+      "date": "2026-09-07",
+      "description": "I rebuilt my Pygame shooter in Godot 4 with an agent. The 95k lines of code were the easy part. Keeping four pictures of the same orc consistent was not.",
+      "tags": [
+        "ai",
+        "gamedev",
+        "godot",
+        "agents",
+        "pipelines"
+      ]
+    },
+    {
       "slug": "certainty_we_never_had",
       "title": "The Certainty We Never Had",
       "date": "2026-08-21",
@@ -17,7 +30,7 @@
       "slug": "luna_agent",
       "title": "I Built My Own AI Agent (And Open-Sourced It)",
       "date": "2026-03-04",
-      "description": "Why I rejected every agent framework and built Luna — a ~2,300-line Python AI agent with SQLite hybrid-search memory, MCP tools, and Discord, fully local.",
+      "description": "Why I rejected every agent framework and built Luna \u2014 a ~2,300-line Python AI agent with SQLite hybrid-search memory, MCP tools, and Discord, fully local.",
       "tags": [
         "ai",
         "agents",
@@ -30,7 +43,7 @@
       "slug": "ai_coauthor",
       "title": "I Co-Authored a Research Paper With an AI Agent",
       "date": "2026-02-04",
-      "description": "How I ran an ML research project with an AI agent as a real collaborator — GaLore continual-learning experiments, a rank scaling law, and a co-authored paper.",
+      "description": "How I ran an ML research project with an AI agent as a real collaborator \u2014 GaLore continual-learning experiments, a rank scaling law, and a co-authored paper.",
       "tags": [
         "ai",
         "ml",
