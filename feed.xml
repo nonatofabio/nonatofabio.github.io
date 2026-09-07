@@ -5,11 +5,89 @@
   <link href="https://nonatofabio.github.io/feed.xml" rel="self"/>
   <link href="https://nonatofabio.github.io/blog/" rel="alternate"/>
   <id>https://nonatofabio.github.io/</id>
-  <updated>2026-08-21T00:00:00Z</updated>
+  <updated>2026-09-07T00:00:00Z</updated>
   <author>
     <name>Fabio Nonato de Paula</name>
     <uri>https://nonatofabio.github.io/</uri>
   </author>
+  <entry>
+    <title>AI Generated Pixel Art Needs a Build System, Not Better Prompts</title>
+    <link href="https://nonatofabio.github.io/blog/posts/pixel_art_build_system.html" rel="alternate"/>
+    <id>https://nonatofabio.github.io/blog/posts/pixel_art_build_system.html</id>
+    <published>2026-09-07T00:00:00Z</published>
+    <updated>2026-09-07T00:00:00Z</updated>
+    <summary>I rebuilt my Pygame shooter in Godot 4 with an agent. The 95k lines of code were the easy part. Keeping four pictures of the same orc consistent was not.</summary>
+    <category term="ai"/>
+    <category term="gamedev"/>
+    <category term="godot"/>
+    <category term="agents"/>
+    <category term="pipelines"/>
+    <content type="html">&lt;p&gt;I rebuilt my tiny homage to Warhammer 40k this week. The original, Hive City Rampage, was a Python/Pygame monstrosity, a top-down grimdark shooter that ran but was a prototype. Now there&amp;#39;s a sequel, Ashgate Siege, built in Godot 4: gothic isometric, two missions, Mac and Android.&lt;/p&gt;
+&lt;p&gt;I have a confession though. The 95k lines of GDScript, 8 commits, roughly five hours, was written by an AI agent under my direction. The sprites are generated too. I&amp;#39;m disclaiming that up front because the interesting part is what came out of it.&lt;/p&gt;
+&lt;h2&gt;The easy part was the code&lt;/h2&gt;
+&lt;p&gt;This is the simple finding. An engine port is exactly the shape of problem my agents are good at: the target is well documented, the semantics known, and correctness is checkable by running the thing. Godot 4 plus GDScript is heavily represented in training data for any model. Zero agent struggle.&lt;/p&gt;
+&lt;h2&gt;The hard part was four pictures of the same orc&lt;/h2&gt;
+&lt;p&gt;Here&amp;#39;s the hill I&amp;#39;m willing to die on: for AI-assisted games, 2D sprite games are harder than 3D.&lt;/p&gt;
+&lt;p&gt;That sounds backwards, so: in 3D, the engine guarantees coherence. One mesh, one material, one light rig, and every frame of animation is consistent because it&amp;#39;s the same object being transformed. The renderer is doing the work.&lt;/p&gt;
+&lt;p&gt;In sprite based games there is no shared object. Each sprite is an independent generated map of pixels. So:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Frame 2 of a walk cycle can be a different character than frame 1.&lt;/li&gt;
+&lt;li&gt;The light source can move between sprites in the same scene.&lt;/li&gt;
+&lt;li&gt;Proportions drift. Your massive size boss shrinks.&lt;/li&gt;
+&lt;li&gt;Limbs get cropped at cell edges.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;None of that is caught by anything automatically. It just ships, and the game looks odd, like a badly executed collage.&lt;/p&gt;
+&lt;h2&gt;Prompts as interface specs&lt;/h2&gt;
+&lt;p&gt;The fix was to stop treating generation as commissioning art and start treating it as calling an API with a strict schema. Every prompt pins the geometry:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;Production game sprite sheet: exactly 4 columns x 3 rows, 1536x1024 canvas,
+equal cells, solid pure magenta #FF00FF background for color-key import.
+NO text, shadows, smoke, or border. Every figure entirely within its own cell
+with ample margin; feet centered at same baseline in each row. All figures face
+screen RIGHT in three-quarter isometric view [...] Four columns are four
+coherent walking-cycle poses: left foot forward, passing, right foot forward,
+passing.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Each sentence has to do some work:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Magenta #FF00FF, not transparency.&lt;/strong&gt; Alpha comes back unreliable. A color key is deterministic to strip.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Explicit grid and canvas.&lt;/strong&gt; The importer crops on fixed coordinates. If the grid drifts, every sprite is off.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;&amp;quot;feet centered at same baseline in each row.&amp;quot;&lt;/strong&gt; Without it the character bobs while walking.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Named poses.&lt;/strong&gt; &amp;quot;Walking animation&amp;quot; returns four unrelated drawings. Naming the four phases is what makes them a cycle.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Negative constraints.&lt;/strong&gt; &amp;quot;No text, shadows, smoke, or border&amp;quot; because models add decoration that breaks the silhouette.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;The importer is a compiler, and tests are CI&lt;/h2&gt;
+&lt;p&gt;If the prompt is a spec, something has to enforce it. Generated atlases go into &lt;code&gt;art/&lt;/code&gt;, an importer crops and scales them into runtime assets, and a native test suite checks the result: 2,972 reference and combat assertions, 17,112 seam combinations, plus a 600-frame combat simulation. &lt;code&gt;make test&lt;/code&gt; runs it.&lt;/p&gt;
+&lt;p&gt;The seam check is the one I lean on. It takes the belt pixels from the leg sprite, offsets them by the waist socket, and counts how many land on opaque torso pixels. Under 32 and the pose fails. Every view, every clip, every frame, every facing, every gait: 17,112 combinations.&lt;/p&gt;
+&lt;p&gt;That catches the failure mode that makes sprites look like a collage, which is a regenerated part that no longer meets the part next to it.&lt;/p&gt;
+&lt;h2&gt;So I tried to break it&lt;/h2&gt;
+&lt;p&gt;Claiming you have tests is cheap. I reimplemented the audit standalone, outside the engine, then fed it deliberately corrupted atlases to find out what it actually catches.&lt;/p&gt;
+&lt;p&gt;Baseline reproduces: 17,112 combinations, zero failures.&lt;/p&gt;
+&lt;p&gt;Then the damage:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Character 4% smaller: &lt;strong&gt;FAIL, 352 bad combinations&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Character 8% smaller: &lt;strong&gt;FAIL, 6,728&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Alpha edge eroded 2px: &lt;strong&gt;FAIL, 3,036&lt;/strong&gt;&lt;/li&gt;
+&lt;li&gt;Torso shifted 6px down in the cell: &lt;strong&gt;PASS&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Scale drift gets caught at 4% and up, and slips through at 3%. Vertical translation is never caught. I pushed it to 14px and it still passed, because shifting the torso down actually &lt;em&gt;raises&lt;/em&gt; the minimum overlap from 59 to 249. The check gets happier while the sprite gets worse.&lt;/p&gt;
+&lt;p&gt;That is a real hole, and it is the honest version of &amp;quot;we have tests.&amp;quot; The seam audit measures whether two parts still meet. It says nothing about whether the assembled pair sits correctly inside its cell, because the waist socket moves with the torso. Catching that needs a different check, anchored to the cell rather than to the neighbouring sprite.&lt;/p&gt;
+&lt;p&gt;I would rather know what the test misses than assume it catches everything.&lt;/p&gt;
+&lt;p&gt;The standalone auditor is &lt;code&gt;tools/seam_audit.py&lt;/code&gt; in the repo. Plain Python, PIL and numpy, no Godot required, so you can run the numbers above yourself.&lt;/p&gt;
+&lt;h2&gt;What I&amp;#39;d tell you to steal from my repo&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Color-key over alpha. Deterministic beats convenient.&lt;/li&gt;
+&lt;li&gt;Pin the grid numerically in the prompt and crop on those exact numbers.&lt;/li&gt;
+&lt;li&gt;Name every animation phase. Never say &amp;quot;walk cycle&amp;quot; and hope.&lt;/li&gt;
+&lt;li&gt;Baseline your seams and diff them. This is the whole safety net.&lt;/li&gt;
+&lt;li&gt;Keep source atlases and prompts in the repo. Regeneration is a build step, so its inputs are source code.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The way this generalizes: if AI generation is nondeterministic, everything downstream has to be strict. The prompt is a spec that gets compiled by the importer, and CI runs the seam tests. Without that you don&amp;#39;t have a pipeline, at best it&amp;#39;s a slot machine you keep pulling until the art looks okay.&lt;/p&gt;
+&lt;h2&gt;Try it&lt;/h2&gt;
+&lt;p&gt;Mac and Android builds are on &lt;a href=&quot;https://github.com/nonatofabio/hive-city-rampage-ii&quot;&gt;GitHub Releases&lt;/a&gt;. They&amp;#39;re previews: macOS is ad-hoc signed and not notarized, Android uses a debug key, so both will warn you. Source builds with &lt;code&gt;make run&lt;/code&gt; if you have Godot 4.3.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;Also published on &lt;a href=&quot;https://dev.to/nonatofabio_28/ai-generated-pixel-art-needs-a-build-system-not-better-prompts-280c&quot;&gt;DEV&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>The Certainty We Never Had</title>
     <link href="https://nonatofabio.github.io/blog/posts/certainty_we_never_had.html" rel="alternate"/>
