@@ -24,6 +24,7 @@
     <category term="pipelines"/>
     <content type="html">&lt;p&gt;I rebuilt my tiny homage to Warhammer 40k this week. The original, Hive City Rampage, was a Python/Pygame monstrosity, a top-down grimdark shooter that ran but was a prototype. Now there&amp;#39;s a sequel, Ashgate Siege, built in Godot 4: gothic isometric, two missions, Mac and Android.&lt;/p&gt;
 &lt;p&gt;I have a confession though. The 95k lines of GDScript, 8 commits, roughly five hours, was written by an AI agent under my direction. The sprites are generated too. I&amp;#39;m disclaiming that up front because the interesting part is what came out of it.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;../../assets/hcr2/title.jpg&quot; alt=&quot;Hive City Rampage II title screen&quot;&gt;&lt;/p&gt;
 &lt;h2&gt;The easy part was the code&lt;/h2&gt;
 &lt;p&gt;This is the simple finding. An engine port is exactly the shape of problem my agents are good at: the target is well documented, the semantics known, and correctness is checkable by running the thing. Godot 4 plus GDScript is heavily represented in training data for any model. Zero agent struggle.&lt;/p&gt;
 &lt;h2&gt;The hard part was four pictures of the same orc&lt;/h2&gt;
@@ -37,6 +38,8 @@
 &lt;li&gt;Limbs get cropped at cell edges.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;None of that is caught by anything automatically. It just ships, and the game looks odd, like a badly executed collage.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;../../assets/hcr2/ashgate.jpg&quot; alt=&quot;Ashgate Siege gameplay: a firefight around a burning signal relay&quot;&gt;&lt;/p&gt;
+&lt;p&gt;That screenshot has maybe a dozen generated sprites in it at once. Every one of them came out of a separate generation, and the only reason they read as one scene is the pipeline below.&lt;/p&gt;
 &lt;h2&gt;Prompts as interface specs&lt;/h2&gt;
 &lt;p&gt;The fix was to stop treating generation as commissioning art and start treating it as calling an API with a strict schema. Every prompt pins the geometry:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;Production game sprite sheet: exactly 4 columns x 3 rows, 1536x1024 canvas,
@@ -82,6 +85,7 @@ passing.
 &lt;li&gt;Keep source atlases and prompts in the repo. Regeneration is a build step, so its inputs are source code.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;The way this generalizes: if AI generation is nondeterministic, everything downstream has to be strict. The prompt is a spec that gets compiled by the importer, and CI runs the seam tests. Without that you don&amp;#39;t have a pipeline, at best it&amp;#39;s a slot machine you keep pulling until the art looks okay.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;../../assets/hcr2/iron-belly.jpg&quot; alt=&quot;Iron Belly: securing a coolant pump while Orks contest the area&quot;&gt;&lt;/p&gt;
 &lt;h2&gt;Try it&lt;/h2&gt;
 &lt;p&gt;Mac and Android builds are on &lt;a href=&quot;https://github.com/nonatofabio/hive-city-rampage-ii&quot;&gt;GitHub Releases&lt;/a&gt;. They&amp;#39;re previews: macOS is ad-hoc signed and not notarized, Android uses a debug key, so both will warn you. Source builds with &lt;code&gt;make run&lt;/code&gt; if you have Godot 4.3.&lt;/p&gt;
 &lt;hr&gt;

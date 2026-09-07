@@ -9,6 +9,8 @@ I rebuilt my tiny homage to Warhammer 40k this week. The original, Hive City Ram
 
 I have a confession though. The 95k lines of GDScript, 8 commits, roughly five hours, was written by an AI agent under my direction. The sprites are generated too. I'm disclaiming that up front because the interesting part is what came out of it.
 
+![Hive City Rampage II title screen](../../assets/hcr2/title.jpg)
+
 ## The easy part was the code
 
 This is the simple finding. An engine port is exactly the shape of problem my agents are good at: the target is well documented, the semantics known, and correctness is checkable by running the thing. Godot 4 plus GDScript is heavily represented in training data for any model. Zero agent struggle.
@@ -27,6 +29,10 @@ In sprite based games there is no shared object. Each sprite is an independent g
 - Limbs get cropped at cell edges.
 
 None of that is caught by anything automatically. It just ships, and the game looks odd, like a badly executed collage.
+
+![Ashgate Siege gameplay: a firefight around a burning signal relay](../../assets/hcr2/ashgate.jpg)
+
+That screenshot has maybe a dozen generated sprites in it at once. Every one of them came out of a separate generation, and the only reason they read as one scene is the pipeline below.
 
 ## Prompts as interface specs
 
@@ -88,6 +94,8 @@ The standalone auditor is `tools/seam_audit.py` in the repo. Plain Python, PIL a
 - Keep source atlases and prompts in the repo. Regeneration is a build step, so its inputs are source code.
 
 The way this generalizes: if AI generation is nondeterministic, everything downstream has to be strict. The prompt is a spec that gets compiled by the importer, and CI runs the seam tests. Without that you don't have a pipeline, at best it's a slot machine you keep pulling until the art looks okay.
+
+![Iron Belly: securing a coolant pump while Orks contest the area](../../assets/hcr2/iron-belly.jpg)
 
 ## Try it
 
