@@ -54,7 +54,8 @@ const posts = JSON.parse(read('blog/posts.json')).posts
     let body = fm ? raw.slice(fm[0].length) : raw;
     // Post pages render the title as the page <h1>; drop a duplicate leading h1.
     body = body.replace(/^\s*#\s+[^\n]*\n/, '');
-    return { ...post, body, url: `${SITE}/blog/posts/${post.slug}.html` };
+    const image = post.image ? `${SITE}${post.image}` : HEADSHOT;
+    return { ...post, body, image, url: `${SITE}/blog/posts/${post.slug}.html` };
   });
 
 const latest = posts[0].date;
@@ -94,7 +95,7 @@ function postPage(post) {
     datePublished: isoDateTime(post.date),
     dateModified: isoDateTime(post.updated || post.date),
     mainEntityOfPage: { '@type': 'WebPage', '@id': post.url },
-    image: HEADSHOT,
+    image: post.image,
     keywords: post.tags.join(', '),
     isPartOf: { '@type': 'Blog', '@id': `${SITE}/blog/#blog` },
     author: { '@type': 'Person', '@id': PERSON_ID, name: AUTHOR, url: `${SITE}/` },
@@ -126,15 +127,15 @@ function postPage(post) {
     <meta property="og:url" content="${post.url}">
     <meta property="og:title" content="${escapeHtml(title)}">
     <meta property="og:description" content="${escapeHtml(post.description)}">
-    <meta property="og:image" content="${HEADSHOT}">
+    <meta property="og:image" content="${post.image}">
     <meta property="article:published_time" content="${isoDateTime(post.date)}">
     <meta property="article:author" content="${SITE}/">
 ${post.tags.map((t) => `    <meta property="article:tag" content="${escapeHtml(t)}">`).join('\n')}
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary">
+    <meta name="twitter:card" content="${post.image === HEADSHOT ? 'summary' : 'summary_large_image'}">
     <meta name="twitter:title" content="${escapeHtml(title)}">
     <meta name="twitter:description" content="${escapeHtml(post.description)}">
-    <meta name="twitter:image" content="${HEADSHOT}">
+    <meta name="twitter:image" content="${post.image}">
     <!-- RSS -->
     <link rel="alternate" type="application/atom+xml" title="${escapeHtml(BLOG_TITLE)}" href="${SITE}/feed.xml">
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">

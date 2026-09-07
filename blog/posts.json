@@ -11,7 +11,8 @@
         "godot",
         "agents",
         "pipelines"
-      ]
+      ],
+      "image": "/assets/hcr2/ashgate.jpg"
     },
     {
       "slug": "certainty_we_never_had",
