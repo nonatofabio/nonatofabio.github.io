@@ -17,14 +17,35 @@ tags: ai, agents, ml, reinforcement-learning, infrastructure
      internally on top of Strands Agents". No internal details are in this draft:
      no Midway, no Slack channels, no AWS account ids, no private repo internals.
      Check with your team before naming the harness more specifically.
-  4. No hero image. Every other post has one except certainty_we_never_had. A
-     tutorial screenshot or a frame of MaleCNS footage would fit; add "image" to
-     the posts.json entry if you want a social preview card.
+  4. VIDEOS ARE NOT IN THE REPO YET. The six <video> tags point at
+     assets/doomfly/*.mp4, which do not exist on this branch - footage is
+     gitignored in doomfly-rl and lives in S3, and this sandbox had no AWS
+     credentials or ffmpeg. Run scripts/import-doomfly-videos.sh from a machine
+     that has both (see that script's header). Until then each slot degrades to
+     a dashed "clip not available yet" box rather than a broken player.
+  5. The clips are the malecns49k v2 final run, chosen as the MEDIAN episode of
+     ten by make_clips.sh, and the captions say so. If you swap in the
+     flywire783 slots, note that tutorial/assets/videos/README.md records those
+     as interim step-20k BEST-of-10 GIFs from pull_videos.sh - best-of-10 is not
+     median, so the caption would become false. Re-render from
+     l40s-v2/runs/flywire783/final instead.
+  6. Social preview: posts.json has no "image". The import script writes a
+     poster frame to assets/doomfly/doomfly_malecns49k_reel_web.jpg - point
+     "image" at /assets/doomfly/doomfly_malecns49k_reel_web.jpg once it exists.
 -->
 
 There is a repo on my GitHub called `doomfly-rl`. It wires a neural network like a fruit fly's brain and trains it to play Doom. It has connectome ETL, a sparse recurrent model, five PPO teachers, a distillation trainer, a GRPO fine-tuner, a CDK stack that runs a GPU fleet in AWS, and a self-contained tutorial page with hover-to-play footage.
 
 I wrote almost none of it.
+
+<figure>
+  <video src="../../assets/doomfly/doomfly_malecns49k_reel_web.mp4"
+         poster="../../assets/doomfly/doomfly_malecns49k_reel_web.jpg"
+         autoplay muted loop playsinline preload="metadata"
+         data-missing="Reel not available yet.">
+  </video>
+  <figcaption>The MaleCNS-49k backbone playing all five ViZDoom scenarios back to back. One episode per scenario, each the median of ten by return, so this is typical play rather than a highlight reel.</figcaption>
+</figure>
 
 It was built by an agentic coding harness we develop internally on top of [Strands Agents](https://strandsagents.com/), running without me at the keyboard. I set the goal and the constraints. The harness did the connectome ETL, the model code, the infrastructure, the fleet operations, the debugging, and the write-ups. Seventeen commits, first to last, span about twenty-three hours.
 
@@ -87,9 +108,38 @@ That refusal is the point. If you let in a learned conv stem, a learned readout,
 
 We ask the ML question instead. Treat the connectome as a structural prior, let gradient descent in, and see what the prior is worth. Theirs tells you what the wiring does on its own. Ours tells you what the wiring buys you as an inductive bias. Neither one invalidates the other, and a `doomfly-rl` score should be read as "connectome-constrained RL agent," never as "a fly."
 
+## The five scenarios, one clip each
+
+<div class="video-grid">
+  <figure>
+    <video src="../../assets/doomfly/malecns49k_basic.mp4" poster="../../assets/doomfly/malecns49k_basic.jpg" controls muted loop playsinline preload="metadata" data-missing="basic - clip not available yet."></video>
+    <figcaption><code>basic</code> - one monster in an empty room, six legal actions. Strafe until lined up, then shoot.</figcaption>
+  </figure>
+  <figure>
+    <video src="../../assets/doomfly/malecns49k_defend_the_center.mp4" poster="../../assets/doomfly/malecns49k_defend_the_center.jpg" controls muted loop playsinline preload="metadata" data-missing="defend_the_center - clip not available yet."></video>
+    <figcaption><code>defend_the_center</code> - rooted in place, enemies close from every side, ammo is finite. Turning is the whole policy.</figcaption>
+  </figure>
+  <figure>
+    <video src="../../assets/doomfly/malecns49k_defend_the_line.mp4" poster="../../assets/doomfly/malecns49k_defend_the_line.jpg" controls muted loop playsinline preload="metadata" data-missing="defend_the_line - clip not available yet."></video>
+    <figcaption><code>defend_the_line</code> - the same job against a wider front, and the one where running out of ammo early is most obvious.</figcaption>
+  </figure>
+  <figure>
+    <video src="../../assets/doomfly/malecns49k_health_gathering.mp4" poster="../../assets/doomfly/malecns49k_health_gathering.jpg" controls muted loop playsinline preload="metadata" data-missing="health_gathering - clip not available yet."></video>
+    <figcaption><code>health_gathering</code> - the floor is acid and the medkits are scattered. No shooting at all; the reward is just staying alive.</figcaption>
+  </figure>
+  <figure>
+    <video src="../../assets/doomfly/malecns49k_deadly_corridor.mp4" poster="../../assets/doomfly/malecns49k_deadly_corridor.jpg" controls muted loop playsinline preload="metadata" data-missing="deadly_corridor - clip not available yet."></video>
+    <figcaption><code>deadly_corridor</code> - seventeen legal actions and shooters down both walls. The hard one, and the one the teacher needed reward shaping and a lower difficulty to learn at all.</figcaption>
+  </figure>
+</div>
+
+Watch the acid-floor run and the corridor run next to each other and the difference is not subtle. `health_gathering` looks purposeful. `deadly_corridor` looks like something walking into gunfire with a plan it has not finished writing.
+
 ## What I don't have yet
 
-Scores.
+Scores. You just watched the fly play; I still cannot tell you how well.
+
+That gap is deliberate. Footage is one episode. A score is a distribution, and the clips above are median episodes precisely so they cannot be mistaken for one. What is missing is the table: mean return and standard deviation per scenario per backbone, same episode count, same seed, next to the teacher that taught it and the 49k ablation that tests whether the big connectome earned its place.
 
 The pipeline runs: PPO teachers on five ViZDoom scenarios, epsilon-greedy rollouts at 300k frames per scenario, distillation into both backbones, then optional GRPO. The GRPO fine-tuner is written and the reasoning behind it is sound. FlyNet's value head is 64 bins bolted onto a sparse readout, it is the weakest part of the model, and PPO's GAE leans on it hard. Group-relative policy optimization throws the critic away and baselines against sibling episodes that share a ViZDoom seed, so the same monsters spawn in the same places and the return difference is the policy's fault rather than the map's.
 

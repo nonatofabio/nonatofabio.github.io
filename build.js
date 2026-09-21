@@ -180,6 +180,29 @@ ${marked.parse(post.body)}
     </article>
 
     ${footer('../../')}
+    <script>
+    // Post videos: honour reduced-motion, and degrade to a caption when a clip is absent.
+    (function () {
+      var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      function fail(v) {
+        if (!v.parentNode) return;
+        var note = document.createElement('div');
+        note.className = 'video-missing';
+        note.textContent = v.dataset.missing || 'Clip not available.';
+        v.parentNode.replaceChild(note, v);
+      }
+      // NETWORK_NO_SOURCE (3) or a set .error means the file is missing. Check
+      // directly as well as on the event: a 404 usually fires during parsing,
+      // before this script runs, so the listener alone would never see it.
+      function check(v) { if (v.error || v.networkState === 3) fail(v); }
+      Array.prototype.forEach.call(document.querySelectorAll('.blog-content video'), function (v) {
+        if (still) { v.removeAttribute('autoplay'); v.pause(); v.setAttribute('controls', ''); }
+        v.addEventListener('error', function () { fail(v); }, true);
+        check(v);
+        setTimeout(function () { check(v); }, 2000);
+      });
+    })();
+    </script>
 </body>
 </html>
 `;
