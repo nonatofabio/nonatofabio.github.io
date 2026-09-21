@@ -55,6 +55,20 @@ for g in $SCENARIOS; do
   copied=$((copied + 1))
 done
 
+# Side-by-side student vs GRPO clips (scripts/compare_clips.sh in doomfly-rl).
+# Only defend_the_center is embedded in the post today; import the rest anyway so
+# swapping which one the post shows is a caption edit, not another render.
+for g in $SCENARIOS; do
+  f=$SRC/${BACKBONE}_student_vs_grpo_$g.mp4
+  [[ -f $f ]] || continue
+  cp "$f" "$DEST/${BACKBONE}_student_vs_grpo_$g.mp4"
+  echo "   compare $g  $(du -h "$DEST/${BACKBONE}_student_vs_grpo_$g.mp4" | cut -f1)"
+  poster "$DEST/${BACKBONE}_student_vs_grpo_$g.mp4"
+  copied=$((copied + 1))
+done
+[[ -f $SRC/${BACKBONE}_student_vs_grpo_defend_the_center.mp4 ]] || \
+  echo "!! missing ${BACKBONE}_student_vs_grpo_defend_the_center.mp4 - the post embeds this one; build it with scripts/compare_clips.sh"
+
 if [[ -f $SRC/$REEL ]]; then
   cp "$SRC/$REEL" "$DEST/$REEL"
   echo "   reel $(du -h "$DEST/$REEL" | cut -f1)"
