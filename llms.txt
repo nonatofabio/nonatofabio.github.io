@@ -10,7 +10,7 @@
 
 ## Posts
 
-- [I Didn't Write the Fly Brain That Plays Doom](https://nonatofabio.github.io/blog/posts/doomfly_autonomous.html): A connectome-constrained network, five ViZDoom scenarios, and a multi-region GPU fleet, built end to end in about 24 hours by an agent harness. The code generation was never the hard part.
+- [I Didn't Write the Fly Brain That Plays Doom](https://nonatofabio.github.io/blog/posts/doomfly_autonomous.html): An agent harness built a connectome-constrained Doom agent, ran a 12-run GRPO sweep on it, and reported that the method did not work. The negative result is the part I trust.
 - [AI Generated Pixel Art Needs a Build System, Not Better Prompts](https://nonatofabio.github.io/blog/posts/pixel_art_build_system.html): I rebuilt my Pygame shooter in Godot 4 with an agent. The 95k lines of code were the easy part. Keeping four pictures of the same orc consistent was not.
 - [The Certainty We Never Had](https://nonatofabio.github.io/blog/posts/certainty_we_never_had.html): Software was never as predictable as we told ourselves. AI didn't break the promise. It exposed that the promise was always fiction.
 - [I Built My Own AI Agent (And Open-Sourced It)](https://nonatofabio.github.io/blog/posts/luna_agent.html): Why I rejected every agent framework and built Luna — a ~2,300-line Python AI agent with SQLite hybrid-search memory, MCP tools, and Discord, fully local.

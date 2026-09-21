@@ -4,12 +4,13 @@
       "slug": "doomfly_autonomous",
       "title": "I Didn't Write the Fly Brain That Plays Doom",
       "date": "2026-09-21",
-      "description": "A connectome-constrained network, five ViZDoom scenarios, and a multi-region GPU fleet, built end to end in about 24 hours by an agent harness. The code generation was never the hard part.",
+      "description": "An agent harness built a connectome-constrained Doom agent, ran a 12-run GRPO sweep on it, and reported that the method did not work. The negative result is the part I trust.",
       "tags": [
         "ai",
         "agents",
         "ml",
         "reinforcement-learning",
+        "grpo",
         "infrastructure"
       ]
     },

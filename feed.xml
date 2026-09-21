@@ -16,11 +16,12 @@
     <id>https://nonatofabio.github.io/blog/posts/doomfly_autonomous.html</id>
     <published>2026-09-21T00:00:00Z</published>
     <updated>2026-09-21T00:00:00Z</updated>
-    <summary>A connectome-constrained network, five ViZDoom scenarios, and a multi-region GPU fleet, built end to end in about 24 hours by an agent harness. The code generation was never the hard part.</summary>
+    <summary>An agent harness built a connectome-constrained Doom agent, ran a 12-run GRPO sweep on it, and reported that the method did not work. The negative result is the part I trust.</summary>
     <category term="ai"/>
     <category term="agents"/>
     <category term="ml"/>
     <category term="reinforcement-learning"/>
+    <category term="grpo"/>
     <category term="infrastructure"/>
     <content type="html">&lt;!-- DRAFT NOTES - resolve before publishing, then delete this block
   1. nonatofabio/doomfly-rl is currently PRIVATE. The GitHub link at the bottom
