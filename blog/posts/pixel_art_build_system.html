@@ -20,7 +20,7 @@
     <meta property="og:url" content="https://nonatofabio.github.io/blog/posts/pixel_art_build_system.html">
     <meta property="og:title" content="AI Generated Pixel Art Needs a Build System, Not Better Prompts | Fabio Nonato de Paula">
     <meta property="og:description" content="I rebuilt my Pygame shooter in Godot 4 with an agent. The 95k lines of code were the easy part. Keeping four pictures of the same orc consistent was not.">
-    <meta property="og:image" content="https://nonatofabio.github.io/assets/headshot.jpeg">
+    <meta property="og:image" content="https://nonatofabio.github.io/assets/hcr2/ashgate.jpg">
     <meta property="article:published_time" content="2026-09-07T00:00:00Z">
     <meta property="article:author" content="https://nonatofabio.github.io/">
     <meta property="article:tag" content="ai">
@@ -29,10 +29,10 @@
     <meta property="article:tag" content="agents">
     <meta property="article:tag" content="pipelines">
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary">
+    <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="AI Generated Pixel Art Needs a Build System, Not Better Prompts | Fabio Nonato de Paula">
     <meta name="twitter:description" content="I rebuilt my Pygame shooter in Godot 4 with an agent. The 95k lines of code were the easy part. Keeping four pictures of the same orc consistent was not.">
-    <meta name="twitter:image" content="https://nonatofabio.github.io/assets/headshot.jpeg">
+    <meta name="twitter:image" content="https://nonatofabio.github.io/assets/hcr2/ashgate.jpg">
     <!-- RSS -->
     <link rel="alternate" type="application/atom+xml" title="Fabio Nonato de Paula — Blog" href="https://nonatofabio.github.io/feed.xml">
     <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700,900&display=swap" rel="stylesheet">
@@ -50,7 +50,7 @@
     "@type": "WebPage",
     "@id": "https://nonatofabio.github.io/blog/posts/pixel_art_build_system.html"
   },
-  "image": "https://nonatofabio.github.io/assets/headshot.jpeg",
+  "image": "https://nonatofabio.github.io/assets/hcr2/ashgate.jpg",
   "keywords": "ai, gamedev, godot, agents, pipelines",
   "isPartOf": {
     "@type": "Blog",
@@ -127,6 +127,7 @@
     <article class="blog-content">
 <p>I rebuilt my tiny homage to Warhammer 40k this week. The original, Hive City Rampage, was a Python/Pygame monstrosity, a top-down grimdark shooter that ran but was a prototype. Now there&#39;s a sequel, Ashgate Siege, built in Godot 4: gothic isometric, two missions, Mac and Android.</p>
 <p>I have a confession though. The 95k lines of GDScript, 8 commits, roughly five hours, was written by an AI agent under my direction. The sprites are generated too. I&#39;m disclaiming that up front because the interesting part is what came out of it.</p>
+<p><img src="../../assets/hcr2/title.jpg" alt="Hive City Rampage II title screen"></p>
 <h2>The easy part was the code</h2>
 <p>This is the simple finding. An engine port is exactly the shape of problem my agents are good at: the target is well documented, the semantics known, and correctness is checkable by running the thing. Godot 4 plus GDScript is heavily represented in training data for any model. Zero agent struggle.</p>
 <h2>The hard part was four pictures of the same orc</h2>
@@ -140,6 +141,8 @@
 <li>Limbs get cropped at cell edges.</li>
 </ul>
 <p>None of that is caught by anything automatically. It just ships, and the game looks odd, like a badly executed collage.</p>
+<p><img src="../../assets/hcr2/ashgate.jpg" alt="Ashgate Siege gameplay: a firefight around a burning signal relay"></p>
+<p>That screenshot has maybe a dozen generated sprites in it at once. Every one of them came out of a separate generation, and the only reason they read as one scene is the pipeline below.</p>
 <h2>Prompts as interface specs</h2>
 <p>The fix was to stop treating generation as commissioning art and start treating it as calling an API with a strict schema. Every prompt pins the geometry:</p>
 <pre><code>Production game sprite sheet: exactly 4 columns x 3 rows, 1536x1024 canvas,
@@ -185,6 +188,7 @@ passing.
 <li>Keep source atlases and prompts in the repo. Regeneration is a build step, so its inputs are source code.</li>
 </ul>
 <p>The way this generalizes: if AI generation is nondeterministic, everything downstream has to be strict. The prompt is a spec that gets compiled by the importer, and CI runs the seam tests. Without that you don&#39;t have a pipeline, at best it&#39;s a slot machine you keep pulling until the art looks okay.</p>
+<p><img src="../../assets/hcr2/iron-belly.jpg" alt="Iron Belly: securing a coolant pump while Orks contest the area"></p>
 <h2>Try it</h2>
 <p>Mac and Android builds are on <a href="https://github.com/nonatofabio/hive-city-rampage-ii">GitHub Releases</a>. They&#39;re previews: macOS is ad-hoc signed and not notarized, Android uses a debug key, so both will warn you. Source builds with <code>make run</code> if you have Godot 4.3.</p>
 <hr>

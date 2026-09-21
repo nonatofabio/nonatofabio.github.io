@@ -5,11 +5,103 @@
   <link href="https://nonatofabio.github.io/feed.xml" rel="self"/>
   <link href="https://nonatofabio.github.io/blog/" rel="alternate"/>
   <id>https://nonatofabio.github.io/</id>
-  <updated>2026-09-07T00:00:00Z</updated>
+  <updated>2026-09-21T00:00:00Z</updated>
   <author>
     <name>Fabio Nonato de Paula</name>
     <uri>https://nonatofabio.github.io/</uri>
   </author>
+  <entry>
+    <title>I Didn't Write the Fly Brain That Plays Doom</title>
+    <link href="https://nonatofabio.github.io/blog/posts/doomfly_autonomous.html" rel="alternate"/>
+    <id>https://nonatofabio.github.io/blog/posts/doomfly_autonomous.html</id>
+    <published>2026-09-21T00:00:00Z</published>
+    <updated>2026-09-21T00:00:00Z</updated>
+    <summary>A connectome-constrained network, five ViZDoom scenarios, and a multi-region GPU fleet, built end to end in about 24 hours by an agent harness. The code generation was never the hard part.</summary>
+    <category term="ai"/>
+    <category term="agents"/>
+    <category term="ml"/>
+    <category term="reinforcement-learning"/>
+    <category term="infrastructure"/>
+    <content type="html">&lt;!-- DRAFT NOTES - resolve before publishing, then delete this block
+  1. nonatofabio/doomfly-rl is currently PRIVATE. The GitHub link at the bottom
+     (and the repo references throughout) will 404 for readers. Either make the
+     repo public before publishing or cut the link.
+  2. No Doom scores are published here on purpose - no eval numbers exist in the
+     repo yet, and AGENTS.md requires every number to trace to a real checkpoint.
+     The &quot;What I don't have yet&quot; section says so explicitly. If runs finish before
+     you publish, that section is the one to rewrite.
+  3. The harness is described only as &quot;an agentic coding harness we develop
+     internally on top of Strands Agents&quot;. No internal details are in this draft:
+     no Midway, no Slack channels, no AWS account ids, no private repo internals.
+     Check with your team before naming the harness more specifically.
+  4. No hero image. Every other post has one except certainty_we_never_had. A
+     tutorial screenshot or a frame of MaleCNS footage would fit; add &quot;image&quot; to
+     the posts.json entry if you want a social preview card.
+--&gt;&lt;p&gt;There is a repo on my GitHub called &lt;code&gt;doomfly-rl&lt;/code&gt;. It wires a neural network like a fruit fly&amp;#39;s brain and trains it to play Doom. It has connectome ETL, a sparse recurrent model, five PPO teachers, a distillation trainer, a GRPO fine-tuner, a CDK stack that runs a GPU fleet in AWS, and a self-contained tutorial page with hover-to-play footage.&lt;/p&gt;
+&lt;p&gt;I wrote almost none of it.&lt;/p&gt;
+&lt;p&gt;It was built by an agentic coding harness we develop internally on top of &lt;a href=&quot;https://strandsagents.com/&quot;&gt;Strands Agents&lt;/a&gt;, running without me at the keyboard. I set the goal and the constraints. The harness did the connectome ETL, the model code, the infrastructure, the fleet operations, the debugging, and the write-ups. Seventeen commits, first to last, span about twenty-three hours.&lt;/p&gt;
+&lt;p&gt;I&amp;#39;m disclaiming that up front because the interesting part is not that an agent wrote working Python. We know agents write working Python. The interesting part is everything that was not Python.&lt;/p&gt;
+&lt;h2&gt;What the thing actually is&lt;/h2&gt;
+&lt;p&gt;The model is called &lt;code&gt;FlyNet&lt;/code&gt;, and it borrows its recipe from &lt;a href=&quot;https://huggingface.co/mlabonne/chessfly&quot;&gt;mlabonne/chessfly&lt;/a&gt;. The recurrent core is a real connectome: FlyWire FAFB v783, 138,639 neurons and 15,091,983 edges carrying about 54.5 million synapses. The wiring is frozen. So is the sign of every connection, excitatory or inhibitory, which the biology already decided. Training learns one gain per synapse and nothing else about the graph.&lt;/p&gt;
+&lt;p&gt;Around that core sit ordinary learned modules. A conv stem takes a 4-frame stack of 72x96 grayscale Doom and turns it into input currents on the 10,855 visual sensory neurons. The network unrolls five steps. A readout takes the 33,788 central, descending and motor neurons down to 512 units, then to one of 22 actions, with a legality mask per scenario.&lt;/p&gt;
+&lt;p&gt;Here are the parameter counts, which matter more than anything else in the post:&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Component&lt;/th&gt;
+&lt;th&gt;Parameters&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;Synaptic log-gains (the connectome)&lt;/td&gt;
+&lt;td&gt;15,091,983&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Homeostatic scale/shift&lt;/td&gt;
+&lt;td&gt;1,386,390&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Stem, decoder, policy and value heads&lt;/td&gt;
+&lt;td&gt;34,538,493&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;&lt;strong&gt;Total&lt;/strong&gt;&lt;/td&gt;
+&lt;td&gt;&lt;strong&gt;51,016,866&lt;/strong&gt;&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;Two thirds of the model is a conv net and an MLP. A conv net and an MLP can learn to play Doom with no fly involved at all. Any claim about &amp;quot;the fly brain playing Doom&amp;quot; has to be read net of those 34.5 million parameters, and mostly it does not survive the reading.&lt;/p&gt;
+&lt;p&gt;So the first rule I had the harness write into its own &lt;code&gt;AGENTS.md&lt;/code&gt; was a vocabulary rule: write &amp;quot;a network constrained to the fly connectome,&amp;quot; never &amp;quot;a fly.&amp;quot; A second backbone, a 49,393-neuron MaleCNS subgraph, trains as an ablation for exactly this reason. If the small brain and the big brain score the same, the connectome is upholstery.&lt;/p&gt;
+&lt;h2&gt;The code was the easy part. Again.&lt;/h2&gt;
+&lt;p&gt;I wrote in &lt;a href=&quot;./pixel_art_build_system.html&quot;&gt;the pixel art post&lt;/a&gt; that the 95k lines of GDScript were the easy part and keeping four pictures of the same orc consistent was not. Same shape of finding here, different axis.&lt;/p&gt;
+&lt;p&gt;Writing a sparse recurrent op, a distillation loop, and a PPO teacher wrapper is well-trodden ground. PyTorch, Stable-Baselines3 and ViZDoom are heavily represented in training data. The model code landed early and mostly worked.&lt;/p&gt;
+&lt;p&gt;What consumed the run was operations. Read the commit log as a list of things that went wrong.&lt;/p&gt;
+&lt;p&gt;The sparse connectome matmul ran under bf16 autocast and produced garbage, because cuSPARSE ships no mixed-dtype kernels; the fix forces fp32 for the spmm and sddmm specifically and leaves the rest of the model in bf16. The pipeline read GPU memory through &lt;code&gt;nvidia-smi | head&lt;/code&gt;, which lies on multi-GPU boxes: under &lt;code&gt;set -o pipefail&lt;/code&gt; the SIGPIPE from &lt;code&gt;head&lt;/code&gt; mangled the output, so the batch size got chosen from a corrupted string. The AWS Deep Learning AMI&amp;#39;s activate script references an unset &lt;code&gt;LD_LIBRARY_PATH&lt;/code&gt;, so a bootstrap running with unset-variable checking on dies at the first line of the venv activation.&lt;/p&gt;
+&lt;p&gt;Then two that are not bugs at all. PPO collapsed to a single action on &lt;code&gt;basic&lt;/code&gt; and &lt;code&gt;deadly_corridor&lt;/code&gt;, which pay plus or minus 100 per event; SB3&amp;#39;s PPO with clip 0.1 read that as saturating and settled on one button forever, until rewards were scaled by 0.01 before the learner, the same thing Sample Factory does. And there were no GPUs. us-west-2 had no L40S capacity, so the harness wrote a mixed-instances ASG with a capacity probe, then a second script that walks instance types across availability zones in other regions until something launches.&lt;/p&gt;
+&lt;p&gt;Not one of those is a coding problem. They are a CUDA kernel limitation, a shell signal semantic, a vendor AMI bug, an RL scaling pathology, and a cloud capacity shortage. Four of the five are invisible until you run the thing on real hardware and watch it fail.&lt;/p&gt;
+&lt;p&gt;This is the hill I&amp;#39;ll die on: we are benchmarking coding agents on the wrong axis. The SWE-bench-shaped question, can it produce a correct patch, is close enough to solved for work like this. The question that actually gates autonomy is whether the agent can operate what it built. Ship code to S3, launch a fleet, notice that the fleet did not come up, go shopping for capacity in another region, tail its own logs, recognize a corrupted GPU memory string as the cause of a wrong batch size, and fix it. Every one of those steps is a place where a harness quietly stalls and waits for a human, and none of them show up in a coding benchmark.&lt;/p&gt;
+&lt;h2&gt;The most useful file is the one with the rules in it&lt;/h2&gt;
+&lt;p&gt;The artifact I keep coming back to is not the model. It is &lt;code&gt;AGENTS.md&lt;/code&gt;, the constraints file the harness works under and maintains.&lt;/p&gt;
+&lt;p&gt;It says what the project is for, and it says what it is not. No claims about biology. Every number in the README or the tutorial has to trace to a checkpoint that exists, with the exact &lt;code&gt;evaluate.py&lt;/code&gt; invocation next to it. Two training boxes never share an S3 prefix. Checkpoints and footage never get committed. Change one thing per GRPO run and name the run after what changed. Negative results get written down, with the run prefix, rather than dropped.&lt;/p&gt;
+&lt;p&gt;That last one is the whole game. An agent optimizing for a satisfied user will hand you the good runs. A rule that says negative results are results, written down before any results exist, is a commitment device. It is cheap to write at the start and expensive to write once you have a number you dislike.&lt;/p&gt;
+&lt;p&gt;The other half of &lt;code&gt;AGENTS.md&lt;/code&gt; is a findings log. Every time the harness hits a gap, a missing script, a step that needs a human, a result that cannot be reproduced from S3, it records that as a finding about the harness rather than working around it silently. The project is instrumentation. Doom is the load.&lt;/p&gt;
+&lt;h2&gt;There is another doomfly, and it is the better science&lt;/h2&gt;
+&lt;p&gt;Partway through, we found &lt;a href=&quot;https://github.com/nftechie/doomfly&quot;&gt;nftechie/doomfly&lt;/a&gt;. Same name, same premise, opposite design, and I think their version asks the sharper question.&lt;/p&gt;
+&lt;p&gt;They simulate the full MaleCNS graph, 166,700 neurons and 25.6 million edges, no pruning, as leaky integrate-and-fire spiking neurons with biological time constants in an event-driven C++ kernel. Pixels map onto R1-R6/R8 photoreceptors through inferred ommatidia. Actions come off named descending neurons: a DNp20 rate difference turns, DNpe017 moves and fires. Nothing on the input or output side is learned. The only plastic synapses are 4,184 KC to MBON11 connections, updated by a dopamine-gated anti-Hebbian rule with two PPL101 cells driven by in-game damage.&lt;/p&gt;
+&lt;p&gt;Their contract forbids exactly what we do: no cropping circuits, no pruning edges, no &amp;quot;replacing the network with a game policy.&amp;quot; And they publish their negative results. Their v6 candidate did not pass its own survival gates, and the repo says so.&lt;/p&gt;
+&lt;p&gt;That refusal is the point. If you let in a learned conv stem, a learned readout, a free gain on every synapse and a value head, you can no longer claim the wiring did anything, because the conv net could have done it alone. Their &amp;quot;no learning demonstrated&amp;quot; is a real result precisely because they left themselves no way to fake a good one.&lt;/p&gt;
+&lt;p&gt;We ask the ML question instead. Treat the connectome as a structural prior, let gradient descent in, and see what the prior is worth. Theirs tells you what the wiring does on its own. Ours tells you what the wiring buys you as an inductive bias. Neither one invalidates the other, and a &lt;code&gt;doomfly-rl&lt;/code&gt; score should be read as &amp;quot;connectome-constrained RL agent,&amp;quot; never as &amp;quot;a fly.&amp;quot;&lt;/p&gt;
+&lt;h2&gt;What I don&amp;#39;t have yet&lt;/h2&gt;
+&lt;p&gt;Scores.&lt;/p&gt;
+&lt;p&gt;The pipeline runs: PPO teachers on five ViZDoom scenarios, epsilon-greedy rollouts at 300k frames per scenario, distillation into both backbones, then optional GRPO. The GRPO fine-tuner is written and the reasoning behind it is sound. FlyNet&amp;#39;s value head is 64 bins bolted onto a sparse readout, it is the weakest part of the model, and PPO&amp;#39;s GAE leans on it hard. Group-relative policy optimization throws the critic away and baselines against sibling episodes that share a ViZDoom seed, so the same monsters spawn in the same places and the return difference is the policy&amp;#39;s fault rather than the map&amp;#39;s.&lt;/p&gt;
+&lt;p&gt;Whether that actually beats distillation on a connectome-constrained network, I cannot tell you. The runs are not finished and the comparison table is empty. The rule in &lt;code&gt;AGENTS.md&lt;/code&gt; says every published number traces to a checkpoint, and I would rather hold the post than launder a partial run into a claim.&lt;/p&gt;
+&lt;p&gt;So treat this as a report on the builder, not on the fly. The harness took a research-shaped goal, built the ETL, the model, the fleet, the training pipeline, the evaluation, the footage and the tutorial, hit five real failures in CUDA, bash, a vendor AMI, an RL optimizer and AWS capacity, fixed all five, and wrote down its own rules for staying honest about the results. That happened in about a day, and the only thing I did was say what I wanted and what it was not allowed to claim.&lt;/p&gt;
+&lt;p&gt;The scores are the next post. If GRPO does nothing for the fly, that is what the next post will say.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;&lt;a href=&quot;https://github.com/nonatofabio/doomfly-rl&quot;&gt;GitHub: nonatofabio/doomfly-rl&lt;/a&gt;&lt;/strong&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;Thanks for reading.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Keep it Awesome!&lt;/em&gt;&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>AI Generated Pixel Art Needs a Build System, Not Better Prompts</title>
     <link href="https://nonatofabio.github.io/blog/posts/pixel_art_build_system.html" rel="alternate"/>
@@ -24,6 +116,7 @@
     <category term="pipelines"/>
     <content type="html">&lt;p&gt;I rebuilt my tiny homage to Warhammer 40k this week. The original, Hive City Rampage, was a Python/Pygame monstrosity, a top-down grimdark shooter that ran but was a prototype. Now there&amp;#39;s a sequel, Ashgate Siege, built in Godot 4: gothic isometric, two missions, Mac and Android.&lt;/p&gt;
 &lt;p&gt;I have a confession though. The 95k lines of GDScript, 8 commits, roughly five hours, was written by an AI agent under my direction. The sprites are generated too. I&amp;#39;m disclaiming that up front because the interesting part is what came out of it.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;../../assets/hcr2/title.jpg&quot; alt=&quot;Hive City Rampage II title screen&quot;&gt;&lt;/p&gt;
 &lt;h2&gt;The easy part was the code&lt;/h2&gt;
 &lt;p&gt;This is the simple finding. An engine port is exactly the shape of problem my agents are good at: the target is well documented, the semantics known, and correctness is checkable by running the thing. Godot 4 plus GDScript is heavily represented in training data for any model. Zero agent struggle.&lt;/p&gt;
 &lt;h2&gt;The hard part was four pictures of the same orc&lt;/h2&gt;
@@ -37,6 +130,8 @@
 &lt;li&gt;Limbs get cropped at cell edges.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;None of that is caught by anything automatically. It just ships, and the game looks odd, like a badly executed collage.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;../../assets/hcr2/ashgate.jpg&quot; alt=&quot;Ashgate Siege gameplay: a firefight around a burning signal relay&quot;&gt;&lt;/p&gt;
+&lt;p&gt;That screenshot has maybe a dozen generated sprites in it at once. Every one of them came out of a separate generation, and the only reason they read as one scene is the pipeline below.&lt;/p&gt;
 &lt;h2&gt;Prompts as interface specs&lt;/h2&gt;
 &lt;p&gt;The fix was to stop treating generation as commissioning art and start treating it as calling an API with a strict schema. Every prompt pins the geometry:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;Production game sprite sheet: exactly 4 columns x 3 rows, 1536x1024 canvas,
@@ -82,6 +177,7 @@ passing.
 &lt;li&gt;Keep source atlases and prompts in the repo. Regeneration is a build step, so its inputs are source code.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;The way this generalizes: if AI generation is nondeterministic, everything downstream has to be strict. The prompt is a spec that gets compiled by the importer, and CI runs the seam tests. Without that you don&amp;#39;t have a pipeline, at best it&amp;#39;s a slot machine you keep pulling until the art looks okay.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;../../assets/hcr2/iron-belly.jpg&quot; alt=&quot;Iron Belly: securing a coolant pump while Orks contest the area&quot;&gt;&lt;/p&gt;
 &lt;h2&gt;Try it&lt;/h2&gt;
 &lt;p&gt;Mac and Android builds are on &lt;a href=&quot;https://github.com/nonatofabio/hive-city-rampage-ii&quot;&gt;GitHub Releases&lt;/a&gt;. They&amp;#39;re previews: macOS is ad-hoc signed and not notarized, Android uses a debug key, so both will warn you. Source builds with &lt;code&gt;make run&lt;/code&gt; if you have Godot 4.3.&lt;/p&gt;
 &lt;hr&gt;
