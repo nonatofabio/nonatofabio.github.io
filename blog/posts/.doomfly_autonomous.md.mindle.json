@@ -1,0 +1,23 @@
+{
+  "annotations" : [
+    {
+      "author" : "fnp",
+      "createdAt" : "2026-09-22T00:03:59Z",
+      "id" : "879DA6D0-2139-4DFD-9371-C534E0F468C8",
+      "note" : "too many broken senteces as the firs paragraph of the blog, this is really bad writing. Go back anc check all your skills about writing, \/ste and \/humanize specially. ",
+      "prefix" : "sets\/doomfly\/doomfly_reel_poster.jpg\n\n\n\n  \n  \n  ",
+      "suffix" : "\n\nThat is not a fly. It is a recurrent network w",
+      "text" : "A network wired like a fruit fly's brain, 49,393 neurons and 9 million synapses, playing all five ViZDoom scenarios. One episode per scenario, each the median of ten by return, so this is typical play and not a highlight reel."
+    }
+  ],
+  "collaborators" : {
+    "fnp" : {
+      "color" : "#4A90D9",
+      "displayName" : "fnp",
+      "type" : "human"
+    }
+  },
+  "fontScale" : 1,
+  "readingWidth" : "medium",
+  "theme" : "sepia"
+}
