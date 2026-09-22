@@ -76,7 +76,7 @@ The fly wiring makes training 22 times slower and buys nothing on these five sce
 
 The five scenarios are saturated, so the next test is a real level. The student already plays Freedoom II MAP01 zero-shot. With its aiming prior it survives twice as long as random and picks up items. It still dies in eight of ten episodes and never leaves the first two rooms. The head surgery for a 23rd action and a sixth scenario embedding is done and tested. Next comes GRPO on that map with all three backbones: real, shuffled and none. If the wiring is ever going to matter, it will be where the policy has to learn rather than imitate. If that learns, the plan is fly versus fly in a duel.
 
-The code is public at [nonatofabio/doomfly-rl](https://github.com/nonatofabio/doomfly-rl), and the trained checkpoints are on [Hugging Face](https://huggingface.co/nonatofabio/doomfly-rl) with the connectome file they need. If you want to watch a network shaped like a fly lose a pistol duel, start there.
+The code is public at [nonatofabio/doomfly-rl](https://github.com/nonatofabio/doomfly-rl), and the trained checkpoints are on [Hugging Face](https://huggingface.co/fabiononato/doomfly-rl) with the connectome file they need. If you want to watch a network shaped like a fly lose a pistol duel, start there.
 
 ---
 
