@@ -5,11 +5,97 @@
   <link href="https://nonatofabio.github.io/feed.xml" rel="self"/>
   <link href="https://nonatofabio.github.io/blog/" rel="alternate"/>
   <id>https://nonatofabio.github.io/</id>
-  <updated>2026-09-07T00:00:00Z</updated>
+  <updated>2026-09-21T00:00:00Z</updated>
   <author>
     <name>Fabio Nonato de Paula</name>
     <uri>https://nonatofabio.github.io/</uri>
   </author>
+  <entry>
+    <title>A Fruit Fly Brain Plays Doom. I Barely Touched the Keyboard.</title>
+    <link href="https://nonatofabio.github.io/blog/posts/doomfly_autonomous.html" rel="alternate"/>
+    <id>https://nonatofabio.github.io/blog/posts/doomfly_autonomous.html</id>
+    <published>2026-09-21T00:00:00Z</published>
+    <updated>2026-09-21T00:00:00Z</updated>
+    <summary>A network wired like a fruit fly's brain plays five Doom scenarios. The Strands harness built it, ran the GPU fleet, and reported two negative results. My part of the transcript is a dozen sentences.</summary>
+    <category term="ai"/>
+    <category term="agents"/>
+    <category term="strands"/>
+    <category term="ml"/>
+    <category term="reinforcement-learning"/>
+    <content type="html">&lt;p&gt;Imagine I opened this post by telling you I got a fly to play Doom. Would you believe me?&lt;/p&gt;
+&lt;figure&gt;
+  &lt;video src=&quot;../../assets/doomfly/doomfly_reel.mp4&quot;
+         poster=&quot;../../assets/doomfly/doomfly_reel_poster.jpg&quot;
+         autoplay muted loop playsinline preload=&quot;metadata&quot;
+         data-missing=&quot;Reel not available yet.&quot;&gt;
+  &lt;/video&gt;
+  &lt;figcaption&gt;The five ViZDoom scenarios, one clip each. Every clip is the median episode of ten, so this is typical play and not a highlight reel.&lt;/figcaption&gt;
+&lt;/figure&gt;&lt;p&gt;You should not. The thing playing up there is not a fly, but its wiring diagram comes from one. It is a recurrent network built on a real fruit fly connectome: 49,393 neurons and 9 million synapses, all frozen, with one learned gain per synapse. An ordinary convolutional network feeds it the game frames and an ordinary MLP turns its activity into moves, and those two hold more than half of the parameters. So read every result in this post as &amp;quot;a network constrained to the fly connectome&amp;quot; and never as &amp;quot;a fly&amp;quot;. Yes, the title breaks that rule. That is the hook, and the rest of the post is the correction.&lt;/p&gt;
+&lt;p&gt;Now, here is the thing: I did not write the code, the infrastructure or the first drafts of the docs. All of it came out of the &lt;a href=&quot;https://github.com/strands-agents/harness-sdk&quot;&gt;Strands harness&lt;/a&gt;, an open-source coding agent from the Strands Agents team at AWS that you run from the terminal. It keeps its own state on disk between sessions and runs tools, tests and cloud deployments on its own. Here it wrote the pipeline that turns the fly&amp;#39;s wiring into a network and the five ordinary Doom agents that served as teachers. It wrote the trainer that taught the fly-wired network to copy them, and the second training stage that tried to push it further. It also wrote the cloud setup that ran a GPU fleet in three AWS regions, and it recorded the footage. Five days, 28 commits, about 3,300 lines of Python and shell, twelve fine-tuning runs and three control runs.&lt;/p&gt;
+&lt;h2&gt;What I actually typed&lt;/h2&gt;
+&lt;p&gt;The harness keeps its own session state on disk, so I went back and read my side of the transcript. It is short. It started with one prompt, typos and all:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;I just saw this: &lt;a href=&quot;https://huggingface.co/mlabonne/chessfly&quot;&gt;https://huggingface.co/mlabonne/chessfly&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;I want to make the same thing but to play doom! Look at the skills and memory and have a set up ready for us to train it using my fnp3 aws accountl. Also create a infographic style tutorial on how it works, both the conectome model as well as the training. Use this current directory as a infra/cdk for training and training source and data ETL pipeline source. Once we complete all, we should have this is a private github repo. If you find a way to start training while I&amp;#39;m away, go for it!&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Across the seven sessions that followed, this is most of what I said:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Go for it!&lt;/p&gt;
+&lt;p&gt;Can you check how are we doing on the training of doomfly?&lt;/p&gt;
+&lt;p&gt;Do you have suggestions to speed up the training process?&lt;/p&gt;
+&lt;p&gt;how do I use tb to see all the runs so far? &lt;em&gt;(tb is TensorBoard)&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Let&amp;#39;s stop and revert all this we should not pursue this anymore&lt;/p&gt;
+&lt;p&gt;Sorry, wrong session!&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&amp;quot;Let&amp;#39;s stop and revert all this&amp;quot; was me killing an easter egg I had asked for an hour earlier: a Doom mod with a fly paw for the player&amp;#39;s hand and Stan the frog, the Strands mascot, as the enemies. The harness reverted the whole thing, previews and tests included, and went back to the training run. &amp;quot;Sorry, wrong session!&amp;quot; came right after I pasted a request meant for a different agent, about a different project.&lt;/p&gt;
+&lt;p&gt;I ran all of it from the terminal with the &lt;code&gt;strands&lt;/code&gt; command, and I changed the model underneath it as I went. The first sessions ran on Claude Fable 5.1 on Amazon Bedrock. By the last day the same sessions were running on GPT-6 Astra at the highest reasoning effort. The transcript does not care which model is behind it, and neither does the repo.&lt;/p&gt;
+&lt;h2&gt;Between my sentences&lt;/h2&gt;
+&lt;p&gt;Everything else in the transcript is the harness at work, and reading it back showed me how much the Strands harness worked for me.&lt;/p&gt;
+&lt;p&gt;Each session persisted to disk, and the next one opened with a summary of the last. Seven sessions over five days read like one conversation, and I could close the laptop at night and pick up in the morning where it left off. Long tool outputs were paged out of the conversation as it grew and fetched back when the agent asked for them. About two hundred of those are still sitting on disk, and without that mechanism the logs from day one alone would have ended the project.&lt;/p&gt;
+&lt;p&gt;Background tasks paid off on the last day. While a two-hour evaluation ran on my Mac, the same agent widened the model&amp;#39;s output from 22 Doom actions to 23 for the next experiment and wrote nine tests for it. It also confirmed that the widened model played the old scenarios bit-for-bit the same as before. The repo has an &lt;code&gt;AGENTS.md&lt;/code&gt; that says never push, launch, terminate or delete without being told, and the harness asked every time. &amp;quot;Go for it!&amp;quot; was me answering. It also loaded my own &lt;a href=&quot;https://github.com/nonatofabio/claude-writing-skills&quot;&gt;writing and verification skills&lt;/a&gt; and the MCP tools I already use, which is why the docs it produced read like mine.&lt;/p&gt;
+&lt;p&gt;None of that is exotic on its own. What I had not seen before is all of it in one command, with nothing to wire up. The same agent is two lines of Python if you want it inside a script, and after this week I would not think twice about starting a project that way.&lt;/p&gt;
+&lt;h2&gt;The part I trust&lt;/h2&gt;
+&lt;p&gt;An agent that returns a plausible positive result is hard to trust. This one returned two negative results, with the run prefixes and standard deviations attached, because its rules say that negative results go in &lt;code&gt;docs/&lt;/code&gt; and not in the bin.&lt;/p&gt;
+&lt;p&gt;A short map of what the harness did, so the two results make sense. It first trained five ordinary Doom agents with PPO, a standard reinforcement learning method, one per scenario. Those are the teachers. It then distilled the teachers into one fly-wired network, the student, by having the student imitate their moves. The student ended up playing about as well as its teachers. The question the project was built for was whether a second stage of reinforcement learning, GRPO, could push it past that.&lt;/p&gt;
+&lt;p&gt;First, it could not. Twelve GRPO runs, one setting changed per run, and not one beat the student by more than the noise in the evaluation. GRPO keeps the new policy close to the student with a penalty. The penalty strength that stopped the policy from wandering into worse play was the same strength that stopped it from improving at all.&lt;/p&gt;
+&lt;p&gt;Second, and this one stings, the connectome does nothing measurable. The harness suggested and built two controls. One keeps the same graph but shuffles its edges, so every neuron keeps its degree and its sign and the biology is gone. The other removes the neuron layer entirely.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Backbone&lt;/th&gt;
+&lt;th&gt;Parameters&lt;/th&gt;
+&lt;th&gt;Training steps per second&lt;/th&gt;
+&lt;th&gt;Doom scores&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;&lt;tr&gt;
+&lt;td&gt;Real connectome&lt;/td&gt;
+&lt;td&gt;48.2 M&lt;/td&gt;
+&lt;td&gt;646&lt;/td&gt;
+&lt;td&gt;baseline&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Shuffled edges, two seeds&lt;/td&gt;
+&lt;td&gt;48.2 M&lt;/td&gt;
+&lt;td&gt;1,454&lt;/td&gt;
+&lt;td&gt;same, within noise&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;No connectome at all&lt;/td&gt;
+&lt;td&gt;27.7 M&lt;/td&gt;
+&lt;td&gt;14,686&lt;/td&gt;
+&lt;td&gt;same, within noise&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;&lt;/table&gt;
+&lt;p&gt;One scenario as an example, ten episodes each: on &lt;code&gt;defend_the_center&lt;/code&gt; the real connectome scored 18.6 ± 1.8, the two shuffled graphs 19.0 and 18.4, and the model with no connectome 18.3. The other four scenarios look the same. The fly wiring makes training 22 times slower and buys nothing on these five scenarios. That is why the caption says &amp;quot;wired like a fruit fly&amp;#39;s brain&amp;quot; and not &amp;quot;a fruit fly&amp;#39;s brain&amp;quot;. The harness wrote that vocabulary rule into &lt;code&gt;AGENTS.md&lt;/code&gt; on day two, before either result existed. It would have been a hard rule to write after a result I disliked.&lt;/p&gt;
+&lt;h2&gt;What&amp;#39;s next&lt;/h2&gt;
+&lt;p&gt;Scores on the five scenarios stopped moving, and three of them sit at their ceilings, so the next test is a real level. The student already plays Freedoom II MAP01 zero-shot. With its aiming prior it survives twice as long as random and picks up items. It still dies in eight of ten episodes and never leaves the first two rooms. The wider output and a slot for a sixth scenario are done and tested. Next comes GRPO on that map with all three backbones: real, shuffled and none. If the wiring is ever going to matter, it will be where the policy has to learn rather than imitate. If the network learns anything there, the plan is fly versus fly in a duel.&lt;/p&gt;
+&lt;p&gt;The code is public at &lt;a href=&quot;https://github.com/nonatofabio/doomfly-rl&quot;&gt;nonatofabio/doomfly-rl&lt;/a&gt;, and the trained checkpoints are on &lt;a href=&quot;https://huggingface.co/fabiononato/doomfly-rl&quot;&gt;Hugging Face&lt;/a&gt; with the connectome file they need. If you want to watch a network shaped like a fly play Doom, start there.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;em&gt;Thanks for reading.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Keep it Awesome!&lt;/em&gt;&lt;/p&gt;
+</content>
+  </entry>
   <entry>
     <title>AI Generated Pixel Art Needs a Build System, Not Better Prompts</title>
     <link href="https://nonatofabio.github.io/blog/posts/pixel_art_build_system.html" rel="alternate"/>

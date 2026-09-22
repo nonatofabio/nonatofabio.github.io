@@ -1,6 +1,20 @@
 {
   "posts": [
     {
+      "slug": "doomfly_autonomous",
+      "title": "A Fruit Fly Brain Plays Doom. I Barely Touched the Keyboard.",
+      "date": "2026-09-21",
+      "description": "A network wired like a fruit fly's brain plays five Doom scenarios. The Strands harness built it, ran the GPU fleet, and reported two negative results. My part of the transcript is a dozen sentences.",
+      "tags": [
+        "ai",
+        "agents",
+        "strands",
+        "ml",
+        "reinforcement-learning"
+      ],
+      "image": "/assets/doomfly/doomfly_reel_poster.jpg"
+    },
+    {
       "slug": "pixel_art_build_system",
       "title": "AI Generated Pixel Art Needs a Build System, Not Better Prompts",
       "date": "2026-09-07",

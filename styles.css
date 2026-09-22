@@ -859,6 +859,44 @@ img {
     margin: 1.5rem 0;
 }
 
+/* ===== Post video figures ===== */
+.blog-content figure {
+    margin: 2rem 0;
+}
+
+.blog-content figure video {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    background: #000;
+    /* Doom renders at 4:3; reserve the box so the page does not jump while loading */
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
+}
+
+.blog-content figcaption {
+    margin-top: 0.625rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+/* A slot with no file yet: the <video> fires onerror and we fall back to this */
+.video-missing {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 4 / 3;
+    border-radius: 8px;
+    border: 1px dashed var(--text-muted);
+    background: var(--bg-secondary);
+    color: var(--text-muted);
+    font-size: 0.8125rem;
+    text-align: center;
+    padding: 1rem;
+}
+
 /* Back to blog link */
 .back-link {
     display: inline-flex;
