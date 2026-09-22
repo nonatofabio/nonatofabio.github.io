@@ -23,10 +23,11 @@ Here is the confession, same as in the [pixel art post](./pixel_art_build_system
 
 ## What I actually typed
 
-The harness keeps its own session state on disk, so I went back and read my side of the transcript. It is short. It started with one prompt:
+The harness keeps its own session state on disk, so I went back and read my side of the transcript. It is short. It started with one prompt, typos and all:
 
-> <!-- TODO(fnp): paste the first prompt verbatim -->
-> FIRST PROMPT GOES HERE
+> I just saw this: https://huggingface.co/mlabonne/chessfly
+>
+> I want to make the same thing but to play doom! Look at the skills and memory and have a set up ready for us to train it using my fnp3 aws accountl. Also create a infographic style tutorial on how it works, both the conectome model as well as the training. Use this current directory as a infra/cdk for training and training source and data ETL pipeline source. Once we complete all, we should have this is a private github repo. If you find a way to start training while I'm away, go for it!
 
 Across the seven sessions that followed, this is most of what I said:
 

@@ -136,10 +136,10 @@
 </figure><p>You should not. The thing playing up there is not a fly, but its wiring diagram comes from one. It is a recurrent network built on a real fruit fly connectome: 49,393 neurons and 9 million synapses, all frozen, with one learned gain per synapse. An ordinary conv stem feeds it and an ordinary MLP reads it out, and those two hold two thirds of the parameters. So read every score in this post as &quot;a network constrained to the fly connectome&quot; and never as &quot;a fly&quot;. I&#39;ll come back to why that sentence matters.</p>
 <p>Here is the confession, same as in the <a href="./pixel_art_build_system.html">pixel art post</a>: I did not write this. The connectome ETL, the sparse recurrent op, the five PPO teachers, the distillation trainer and the GRPO fine-tuner came out of the <a href="https://github.com/strands-agents/harness-sdk">Strands harness</a>. So did the CDK stack that ran a GPU fleet in three AWS regions, the footage and the write-ups. It took five days and 28 commits, about 3,300 lines of Python and shell, twelve fine-tuning runs and four control runs.</p>
 <h2>What I actually typed</h2>
-<p>The harness keeps its own session state on disk, so I went back and read my side of the transcript. It is short. It started with one prompt:</p>
+<p>The harness keeps its own session state on disk, so I went back and read my side of the transcript. It is short. It started with one prompt, typos and all:</p>
 <blockquote>
-<!-- TODO(fnp): paste the first prompt verbatim -->
-<p>FIRST PROMPT GOES HERE</p>
+<p>I just saw this: <a href="https://huggingface.co/mlabonne/chessfly">https://huggingface.co/mlabonne/chessfly</a></p>
+<p>I want to make the same thing but to play doom! Look at the skills and memory and have a set up ready for us to train it using my fnp3 aws accountl. Also create a infographic style tutorial on how it works, both the conectome model as well as the training. Use this current directory as a infra/cdk for training and training source and data ETL pipeline source. Once we complete all, we should have this is a private github repo. If you find a way to start training while I&#39;m away, go for it!</p>
 </blockquote>
 <p>Across the seven sessions that followed, this is most of what I said:</p>
 <blockquote>
