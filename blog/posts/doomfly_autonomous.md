@@ -19,7 +19,7 @@ Imagine I opened this post by telling you I got a fly to play Doom. Would you be
 
 You should not. The thing playing up there is not a fly, but its wiring diagram comes from one. It is a recurrent network built on a real fruit fly connectome: 49,393 neurons and 9 million synapses, all frozen, with one learned gain per synapse. An ordinary conv stem feeds it and an ordinary MLP reads it out, and those two hold two thirds of the parameters. So read every score in this post as "a network constrained to the fly connectome" and never as "a fly". I'll come back to why that sentence matters.
 
-Here is the confession, same as in the [pixel art post](./pixel_art_build_system.html): I did not write this. The connectome ETL, the sparse recurrent op, the five PPO teachers, the distillation trainer and the GRPO fine-tuner came out of the [Strands harness](https://github.com/strands-agents/harness-sdk). So did the CDK stack that ran a GPU fleet in three AWS regions, the footage and the write-ups. It took five days and 28 commits, about 3,300 lines of Python and shell, twelve fine-tuning runs and four control runs.
+Now, here is the thing: I did not write this. The connectome ETL, the sparse recurrent op, the five PPO teachers, the distillation trainer and the GRPO fine-tuner came out of the [Strands harness](https://github.com/strands-agents/harness-sdk). So did the CDK stack that ran a GPU fleet in three AWS regions, the footage and the write-ups. It took five days and 28 commits, about 3,300 lines of Python and shell, twelve fine-tuning runs and four control runs.
 
 ## What I actually typed
 
@@ -43,17 +43,17 @@ Across the seven sessions that followed, this is most of what I said:
 >
 > Sorry, wrong session!
 
-The last one is me pasting a request meant for a different agent. The one before it is me killing an easter egg I had asked for an hour earlier. I wanted a Doom mod with a fly paw for the player's hand and the Strands frog as the enemies. The harness reverted the whole thing, previews and tests included, and went back to the training run.
+The last one is me pasting a request meant for a different agent. The one before it is me killing an easter egg I had asked for an hour earlier. I wanted a Doom mod with a fly paw for the player's hand and Stan the frog, the Strands mascot, as the enemies. The harness reverted the whole thing, previews and tests included, and went back to the training run.
 
-I ran all of it from the terminal with the `strands` command, and I changed the model underneath it as I went. The first sessions ran on Claude Fable 5.1 on Amazon Bedrock. By the last day the same sessions were running on GPT-6 Astra at the highest reasoning effort, and the controls and the head surgery came out of that setup. The transcript does not care which model is behind it, and neither did the repo.
+I ran all of it from the terminal with the `strands` command, and I changed the model underneath it as I went. The first sessions ran on Claude Fable 5.1 on Amazon Bedrock. By the last day the same sessions were running on GPT-6 Astra at the highest reasoning effort. The transcript does not care which model is behind it, and neither did the repo.
 
 ## Between my sentences
 
-Everything else in the transcript is the harness at work, and reading it back is where I learned what a harness is for.
+Everything else in the transcript is the harness at work, and reading it back is where I saw how much the Strands harness worked for me.
 
 Each session persisted to disk, and the next one opened with a summary of the last. Seven sessions over five days read like one conversation, and I could close the laptop at night and pick up in the morning where it left off. Long tool outputs left the context as the conversation grew and came back when the agent asked for them. About two hundred of those are still sitting on disk, and without that mechanism the logs from day one alone would have ended the project.
 
-Background tasks paid off on the last day. While a two-hour evaluation ran on my Mac, the same agent widened the model's action head and wrote nine tests for it. It also confirmed that the converted checkpoint was bit-identical on the old scenarios. The repo has an `AGENTS.md` that says never push, launch, terminate or delete without being told, and the harness asked every time. "Go for it!" was me answering. It also loaded my own skills for writing and verification and the MCP tools I already use, which is why the docs it produced read like mine.
+Background tasks paid off on the last day. While a two-hour evaluation ran on my Mac, the same agent widened the model's action head and wrote nine tests for it. It also confirmed that the converted checkpoint was bit-identical on the old scenarios. The repo has an `AGENTS.md` that says never push, launch, terminate or delete without being told, and the harness asked every time. "Go for it!" was me answering. It also loaded my own [writing and verification skills](https://github.com/nonatofabio/claude-writing-skills) and the MCP tools I already use, which is why the docs it produced read like mine.
 
 None of that is exotic on its own. What I had not seen before is all of it in one command, with nothing to wire up. The same agent is two lines of Python if you want it inside a script, and after this week I would not think twice about starting a project that way.
 
@@ -61,9 +61,11 @@ None of that is exotic on its own. What I had not seen before is all of it in on
 
 An agent that returns a plausible positive result is worth nothing. This one returned two negative results, with the run prefixes and standard deviations attached, because its rules say that negative results go in `docs/` and not in the bin.
 
-First, the fine-tuning method the project was built to test does not work. Twelve GRPO runs, one knob changed per run, and not one beats the distilled student outside eval noise. The KL penalty that stops the policy from drifting is the same setting that stops it from improving.
+A short map of what the harness did, so the two results make sense. It first trained five ordinary Doom agents with PPO, a standard reinforcement learning method, one per scenario. Those are the teachers. It then distilled the teachers into one fly-wired network, the student, by having the student imitate their moves. The question the project was built for was whether a second stage of reinforcement learning, GRPO, could push the student past its teachers.
 
-Second, and this one stings, the connectome does nothing measurable. The harness built two controls. One keeps the same graph but shuffles its edges, so every neuron keeps its degree and its sign and the biology is gone. The other removes the neuron layer entirely.
+First, it could not. Twelve GRPO runs, one setting changed per run, and not one beat the student by more than the noise in the evaluation. GRPO keeps the new policy close to the student with a penalty. The penalty strength that stopped the policy from wandering into worse play was the same strength that stopped it from improving at all.
+
+Second, and this one stings, the connectome does nothing measurable. The harness suggested and built two controls. One keeps the same graph but shuffles its edges, so every neuron keeps its degree and its sign and the biology is gone. The other removes the neuron layer entirely.
 
 | Backbone | Parameters | Training speed | Doom scores |
 |---|---|---|---|
