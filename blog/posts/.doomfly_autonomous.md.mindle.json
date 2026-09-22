@@ -2,12 +2,39 @@
   "annotations" : [
     {
       "author" : "fnp",
-      "createdAt" : "2026-09-22T00:03:59Z",
-      "id" : "879DA6D0-2139-4DFD-9371-C534E0F468C8",
-      "note" : "too many broken senteces as the firs paragraph of the blog, this is really bad writing. Go back anc check all your skills about writing, \/ste and \/humanize specially. ",
+      "createdAt" : "2026-09-22T00:18:42Z",
+      "id" : "AE3C0D7C-03AA-420C-80C5-3F0B87DFF944",
+      "note" : "It should start with a catchy hook, like “Imagine if I started this blog by telling you I got a fly to play Doom? Would you believe me?”",
       "prefix" : "sets\/doomfly\/doomfly_reel_poster.jpg\n\n\n\n  \n  \n  ",
-      "suffix" : "\n\nThat is not a fly. It is a recurrent network w",
-      "text" : "A network wired like a fruit fly's brain, 49,393 neurons and 9 million synapses, playing all five ViZDoom scenarios. One episode per scenario, each the median of ten by return, so this is typical play and not a highlight reel."
+      "suffix" : " the five ViZDoom scenarios. Each clip is the me",
+      "text" : "A network wired like a fruit fly's brain plays"
+    },
+    {
+      "author" : "fnp",
+      "createdAt" : "2026-09-22T00:19:23Z",
+      "id" : "F9B57E17-488E-4361-9054-A03A3BDEBBC7",
+      "note" : "We need the first ever prompt at some point. And maybe a breadkdown of different models I used",
+      "prefix" : "s seven sessions, this is most of what I said:\n\n",
+      "suffix" : "\nCan you check how are we doing on the training ",
+      "text" : "Go for it!"
+    },
+    {
+      "author" : "fnp",
+      "createdAt" : "2026-09-22T00:20:06Z",
+      "id" : "C8A14161-D908-42DC-AECB-55AE9950F9B8",
+      "note" : "Not true, I used the CLI, but we can use this as a “I wouldn’t now be afraid of starting a project with a couple lines of python only…”",
+      "prefix" : "t back is a plain Strands agent you can change:\n",
+      "suffix" : "\n\nThat one call is why a five-day, multi-region ",
+      "text" : "from strands_harness import create_harness\n\nagent = create_harness()\nagent(\"Train a network constrained to the fruit fly connectome to play Doom\")"
+    },
+    {
+      "author" : "fnp",
+      "createdAt" : "2026-09-22T00:20:56Z",
+      "id" : "BB6C59DB-8433-4584-8A28-89F1B0BCD7D5",
+      "note" : "Without reading much into it, the placement and content of this section (the starting parasgraph and the code block right after made it sound marketing. We don’t like that on our blogs. ",
+      "prefix" : "t and pick up in the morning where it left off.\n",
+      "suffix" : "\nThe Strands harness is the batteries-included a",
+      "text" : "What the harness gave me"
     }
   ],
   "collaborators" : {

@@ -6,6 +6,8 @@ tags: ai, agents, strands, ml, reinforcement-learning
 image: /assets/doomfly/doomfly_reel_poster.jpg
 ---
 
+Imagine I opened this post by telling you I got a fly to play Doom. Would you believe me?
+
 <figure>
   <video src="../../assets/doomfly/doomfly_reel.mp4"
          poster="../../assets/doomfly/doomfly_reel_poster.jpg"
@@ -15,13 +17,18 @@ image: /assets/doomfly/doomfly_reel_poster.jpg
   <figcaption>A network wired like a fruit fly's brain plays the five ViZDoom scenarios. Each clip is the median episode of ten, so this is typical play and not a highlight reel.</figcaption>
 </figure>
 
-The thing playing up there is not a fly, but its wiring diagram comes from one. It is a recurrent network built on a real fruit fly connectome: 49,393 neurons and 9 million synapses, all frozen, with one learned gain per synapse. An ordinary conv stem feeds it and an ordinary MLP reads it out, and those two hold two thirds of the parameters. So read every score in this post as "a network constrained to the fly connectome" and never as "a fly". I'll come back to why that sentence matters.
+You should not. The thing playing up there is not a fly, but its wiring diagram comes from one. It is a recurrent network built on a real fruit fly connectome: 49,393 neurons and 9 million synapses, all frozen, with one learned gain per synapse. An ordinary conv stem feeds it and an ordinary MLP reads it out, and those two hold two thirds of the parameters. So read every score in this post as "a network constrained to the fly connectome" and never as "a fly". I'll come back to why that sentence matters.
 
-Here is the confession, same as in the [pixel art post](./pixel_art_build_system.html): I did not write this. The connectome ETL, the sparse recurrent op, the five PPO teachers, the distillation trainer and the GRPO fine-tuner came out of the [Strands harness](https://pypi.org/project/strands-harness/). So did the CDK stack that ran a GPU fleet in three AWS regions, the footage and the write-ups. It took five days and 28 commits, about 3,300 lines of Python and shell, twelve fine-tuning runs and four control runs.
+Here is the confession, same as in the [pixel art post](./pixel_art_build_system.html): I did not write this. The connectome ETL, the sparse recurrent op, the five PPO teachers, the distillation trainer and the GRPO fine-tuner came out of the [Strands harness](https://github.com/strands-agents/harness-sdk). So did the CDK stack that ran a GPU fleet in three AWS regions, the footage and the write-ups. It took five days and 28 commits, about 3,300 lines of Python and shell, twelve fine-tuning runs and four control runs.
 
 ## What I actually typed
 
-The harness keeps its own session state on disk, so I went back and read my side of the transcript. It is short. Across seven sessions, this is most of what I said:
+The harness keeps its own session state on disk, so I went back and read my side of the transcript. It is short. It started with one prompt:
+
+> <!-- TODO(fnp): paste the first prompt verbatim -->
+> FIRST PROMPT GOES HERE
+
+Across the seven sessions that followed, this is most of what I said:
 
 > Go for it!
 >
@@ -37,22 +44,17 @@ The harness keeps its own session state on disk, so I went back and read my side
 
 The last one is me pasting a request meant for a different agent. The one before it is me killing an easter egg I had asked for an hour earlier. I wanted a Doom mod with a fly paw for the player's hand and the Strands frog as the enemies. The harness reverted the whole thing, previews and tests included, and went back to the training run.
 
-Everything else in the transcript is the harness at work. There are hundreds of tool calls and a couple hundred large results moved out of context and pulled back when needed. There are background tasks, and a summary carried from one session into the next. I could close the laptop at night and pick up in the morning where it left off.
+I ran all of it from the terminal with the `strands` command, and I changed the model underneath it as I went. The first sessions ran on Claude Fable 5.1 on Amazon Bedrock. By the last day the same sessions were running on GPT-6 Astra at the highest reasoning effort, and the controls and the head surgery came out of that setup. The transcript does not care which model is behind it, and neither did the repo.
 
-## What the harness gave me
+## Between my sentences
 
-The [Strands harness](https://github.com/strands-agents/harness-sdk) is the batteries-included agent from the Strands Agents team at AWS. It is open source and it is one call, and what you get back is a plain Strands agent you can change:
+Everything else in the transcript is the harness at work, and reading it back is where I learned what a harness is for.
 
-```python
-from strands_harness import create_harness
+Each session persisted to disk, and the next one opened with a summary of the last. Seven sessions over five days read like one conversation, and I could close the laptop at night and pick up in the morning where it left off. Long tool outputs left the context as the conversation grew and came back when the agent asked for them. About two hundred of those are still sitting on disk, and without that mechanism the logs from day one alone would have ended the project.
 
-agent = create_harness()
-agent("Train a network constrained to the fruit fly connectome to play Doom")
-```
+Background tasks paid off on the last day. While a two-hour evaluation ran on my Mac, the same agent widened the model's action head and wrote nine tests for it. It also confirmed that the converted checkpoint was bit-identical on the old scenarios. The repo has an `AGENTS.md` that says never push, launch, terminate or delete without being told, and the harness asked every time. "Go for it!" was me answering. It also loaded my own skills for writing and verification and the MCP tools I already use, which is why the docs it produced read like mine.
 
-That one call is why a five-day, multi-region GPU project fit in a chat window. Sessions did the most work. Each one persisted to disk and the next one started from a summary of the last, so seven sessions over five days behaved like one long conversation. Context management came second: long tool outputs left the context and came back on demand, and without that the logs from day one alone would have ended the project.
-
-Background tasks paid off on the last day. While a two-hour evaluation ran on my Mac, the same agent widened the model's action head and wrote nine tests for it. It also confirmed that the converted checkpoint was bit-identical on the old scenarios. Interventions kept me in the loop. The repo has an `AGENTS.md` that says never push, launch, terminate or delete without being told. The harness asked every time, and "Go for it!" was me answering. It also loaded my own skills for writing and verification and the MCP tools I already use, which is why the docs it produced read like mine.
+None of that is exotic on its own. What I had not seen before is all of it in one command, with nothing to wire up. The same agent is two lines of Python if you want it inside a script, and after this week I would not think twice about starting a project that way.
 
 ## The part I trust
 
