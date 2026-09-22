@@ -224,15 +224,25 @@
         note.textContent = v.dataset.missing || 'Clip not available.';
         v.parentNode.replaceChild(note, v);
       }
-      // NETWORK_NO_SOURCE (3) or a set .error means the file is missing. Check
-      // directly as well as on the event: a 404 usually fires during parsing,
-      // before this script runs, so the listener alone would never see it.
-      function check(v) { if (v.error || v.networkState === 3) fail(v); }
+      // Only a real error means the clip is absent. networkState is NOT a
+      // reliable signal: with preload="metadata" it reads NETWORK_NO_SOURCE (3)
+      // before the fetch starts, so checking it synchronously replaced a good
+      // video on every cold load and only looked fine on a cached refresh.
+      // Confirm with a HEAD request before giving up.
+      function check(v) {
+        if (v.error) return fail(v);
+        if (v.readyState === 0 && v.networkState === 3) {
+          var src = v.currentSrc || v.getAttribute('src');
+          if (!src) return fail(v);
+          fetch(src, { method: 'HEAD' })
+            .then(function (r) { if (!r.ok) fail(v); })
+            .catch(function () { fail(v); });
+        }
+      }
       Array.prototype.forEach.call(document.querySelectorAll('.blog-content video'), function (v) {
         if (still) { v.removeAttribute('autoplay'); v.pause(); v.setAttribute('controls', ''); }
         v.addEventListener('error', function () { fail(v); }, true);
-        check(v);
-        setTimeout(function () { check(v); }, 2000);
+        setTimeout(function () { check(v); }, 4000);
       });
     })();
     </script>
