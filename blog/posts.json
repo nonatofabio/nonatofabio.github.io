@@ -2,7 +2,7 @@
   "posts": [
     {
       "slug": "doomfly_autonomous",
-      "title": "A Fruit Fly Brain Plays Doom. I Barely Touched the Keyboard.",
+      "title": "A Fruit Fly Brain Plays Doom",
       "date": "2026-09-21",
       "description": "A network wired like a fruit fly's brain plays five Doom scenarios. The Strands harness built it, ran the GPU fleet, and reported two negative results. My part of the transcript is a dozen sentences.",
       "tags": [
